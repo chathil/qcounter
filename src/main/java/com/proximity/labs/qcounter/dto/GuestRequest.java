@@ -1,7 +1,5 @@
 package com.proximity.labs.qcounter.dto;
 
-import org.springframework.web.bind.annotation.RequestParam;
-
 public class GuestRequest {
     private String deviceToken;
     private String ipAddress;
@@ -25,6 +23,4 @@ public class GuestRequest {
     public String getName() {
         return name;
     }
-
-  
 }

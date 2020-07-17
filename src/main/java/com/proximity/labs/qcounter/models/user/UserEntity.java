@@ -1,15 +1,27 @@
 package com.proximity.labs.qcounter.models.user;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
-@Entity // This tells Hibernate to make a table out of this class
-public class User {
+import org.springframework.security.core.GrantedAuthority;
 
-  public User(String name, String email, String password, String ipAddress) {
+@Entity
+@Table(name = "users")
+public class UserEntity {
+
+  public UserEntity(String name, String email, String password, String ipAddress) {
     this.name = name;
     this.email = email;
     this.password = password;
@@ -17,7 +29,7 @@ public class User {
   }
 
   @Id
-  @GeneratedValue(strategy=GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private Integer id;
 
   private final String name;
@@ -41,6 +53,9 @@ public class User {
 
   @Column(name = "profile_completion", nullable = false)
   private int profileCompletion = 10;
+
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  private List<UserDevice> userDevice;
 
   public Integer getId() {
     return id;
@@ -89,5 +104,12 @@ public class User {
   public void setProfileCompletion(int profileCompletion) {
     this.profileCompletion = profileCompletion;
   }
-}
 
+  public List<UserDevice> getUserDevice() {
+    return userDevice;
+  }
+
+  public void setUserDevice(List<UserDevice> userDevice) {
+    this.userDevice = userDevice;
+  }
+}
