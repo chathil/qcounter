@@ -25,26 +25,24 @@ public class UserEntity {
     this.password = password;
     this.ipAddress = ipAddress;
   }
+  public UserEntity() {}
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Integer id;
 
-  private final String name;
+  private String name;
+
+  @Column(unique = true, nullable = true)
+  private String email;
 
   @Column(nullable = true)
-  private final String email;
+  private String password;
 
-  @Column(nullable = true)
-  private final String password;
-
-  private final String location = "Indonesia";
+  private String location = "Indonesia";
 
   @Column(name = "ip_address", nullable = false)
-  private final String ipAddress;
-
-  @Column(name = "profile_picture", nullable = true)
-  private String profilePicture;
+  private String ipAddress;
 
   @Column(name = "account_type", nullable = false)
   private AccountType accountType = AccountType.GUEST;
@@ -78,15 +76,7 @@ public class UserEntity {
   public String getIpAddress() {
     return ipAddress;
   }
-
-  public String getProfilePicture() {
-    return profilePicture;
-  }
-
-  public void setProfilePicture(String profilePicture) {
-    this.profilePicture = profilePicture;
-  }
-
+  
   public AccountType getAccountType() {
     return accountType;
   }
@@ -110,4 +100,9 @@ public class UserEntity {
   public void setUserDevice(List<UserDeviceEntity> userDevice) {
     this.userDevice = userDevice;
   }
+
+  public String hexId() {
+    return Integer.toHexString(id);
+  }
+
 }

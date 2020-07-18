@@ -15,6 +15,9 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "user_devices")
 public class UserDeviceEntity {
+
+    public UserDeviceEntity() {}
+
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer id;
