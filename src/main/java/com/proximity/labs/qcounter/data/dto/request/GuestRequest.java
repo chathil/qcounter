@@ -1,6 +1,6 @@
-package com.proximity.labs.qcounter.dto;
+package com.proximity.labs.qcounter.data.dto.request;
 
-public class GuestRequest {
+public class GuestRequest implements Request {
     private String deviceToken;
     private String ipAddress;
     private String name;
@@ -10,7 +10,6 @@ public class GuestRequest {
         this.ipAddress = ipAddress;
         this.name = name;
     }
-
 
     public String getDeviceToken() {
         return deviceToken;

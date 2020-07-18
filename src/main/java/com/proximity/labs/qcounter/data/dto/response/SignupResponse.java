@@ -1,8 +1,8 @@
-package com.proximity.labs.qcounter.dto;
+package com.proximity.labs.qcounter.data.dto.response;
 
-import com.proximity.labs.qcounter.models.user.AccountType;
+import com.proximity.labs.qcounter.data.models.user.AccountType;
 
-public class SignupResponse {
+public class SignupResponse implements Response {
     private final int id;
     private final String deviceToken;
     private final String accessToken;

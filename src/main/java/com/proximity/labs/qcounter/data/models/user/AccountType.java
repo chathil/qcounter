@@ -1,4 +1,4 @@
-package com.proximity.labs.qcounter.models.user;
+package com.proximity.labs.qcounter.data.models.user;
 
 public enum AccountType {
     GUEST ("guest"),

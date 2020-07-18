@@ -1,4 +1,4 @@
-package com.proximity.labs.qcounter.models.user;
+package com.proximity.labs.qcounter.data.models.user;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,8 +14,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import org.springframework.security.core.GrantedAuthority;
 
 @Entity
 @Table(name = "users")
@@ -55,7 +53,7 @@ public class UserEntity {
   private int profileCompletion = 10;
 
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  private List<UserDevice> userDevice;
+  private List<UserDeviceEntity> userDevice;
 
   public Integer getId() {
     return id;
@@ -105,11 +103,11 @@ public class UserEntity {
     this.profileCompletion = profileCompletion;
   }
 
-  public List<UserDevice> getUserDevice() {
+  public List<UserDeviceEntity> getUserDevice() {
     return userDevice;
   }
 
-  public void setUserDevice(List<UserDevice> userDevice) {
+  public void setUserDevice(List<UserDeviceEntity> userDevice) {
     this.userDevice = userDevice;
   }
 }

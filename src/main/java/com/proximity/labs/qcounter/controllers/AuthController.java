@@ -4,17 +4,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.proximity.labs.qcounter.dto.GuestRequest;
-import com.proximity.labs.qcounter.dto.SignupResponse;
-import com.proximity.labs.qcounter.models.user.UserEntity;
-import com.proximity.labs.qcounter.models.user.UserDevice;
-import com.proximity.labs.qcounter.models.user.UserDeviceRepository;
-import com.proximity.labs.qcounter.models.user.UserRepository;
+import com.proximity.labs.qcounter.data.dto.response.SignupResponse;
+import com.proximity.labs.qcounter.data.models.user.UserDeviceEntity;
+import com.proximity.labs.qcounter.data.models.user.UserDeviceRepository;
+import com.proximity.labs.qcounter.data.models.user.UserEntity;
+import com.proximity.labs.qcounter.data.models.user.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.lang.NonNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -23,10 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
-import org.springframework.web.bind.annotation.GetMapping;
 
-
-@RestController
+@RestController //annotation processor
 public class AuthController {
 	@Autowired
 	private UserRepository userRepository;
@@ -34,7 +32,6 @@ public class AuthController {
 	private UserDeviceRepository userDeviceRepository;
 	
 	@PostMapping("/auth/guest")
-
 	public @ResponseBody SignupResponse guestSignup (
 		@RequestParam("device_token") String deviceToken,
 		@RequestParam("ip_address") String ipAddress,
@@ -42,7 +39,7 @@ public class AuthController {
 		) {
 		UserEntity newUser = new UserEntity(name, null, null, ipAddress);
 		UserEntity savedUser = userRepository.save(newUser);
-		userDeviceRepository.save(new UserDevice(deviceToken, savedUser));
+		userDeviceRepository.save(new UserDeviceEntity(deviceToken, savedUser));
 		return new SignupResponse(
 			savedUser.getId(),
 			deviceToken,
@@ -67,7 +64,7 @@ public class AuthController {
 	) {
 		UserEntity newUser = new UserEntity(name, email, password, ipAddress);
 		UserEntity savedUser = userRepository.save(newUser);
-		userDeviceRepository.save(new UserDevice(deviceToken, savedUser));
+		userDeviceRepository.save(new UserDeviceEntity(deviceToken, savedUser));
 		return new SignupResponse(
 			savedUser.getId(),
 			deviceToken,
@@ -85,7 +82,7 @@ public class AuthController {
 	@GetMapping("/auth/signin")
 	public SignupResponse signin(
 		@RequestParam("device_token") String deviceToken,
-		@RequestParam("ip_address") String ipAddress,
+		@NonNull @RequestParam("ip_address") String ipAddress,
 		@RequestParam String email,
 		@RequestParam String password
 		) {
@@ -113,5 +110,4 @@ public class AuthController {
 
 		return "Bearer " + token;
 	}
-	
 }

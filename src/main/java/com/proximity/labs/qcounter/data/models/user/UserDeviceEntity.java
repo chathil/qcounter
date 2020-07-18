@@ -1,4 +1,4 @@
-package com.proximity.labs.qcounter.models.user;
+package com.proximity.labs.qcounter.data.models.user;
 
 import javax.annotation.Generated;
 import javax.persistence.Column;
@@ -14,7 +14,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "user_devices")
-public class UserDevice {
+public class UserDeviceEntity {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer id;
@@ -26,7 +26,7 @@ public class UserDevice {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    public UserDevice(String deviceToken, UserEntity user) {
+    public UserDeviceEntity(String deviceToken, UserEntity user) {
         this.deviceToken = deviceToken;
         this.user = user;
     }
