@@ -1,6 +1,6 @@
 package com.proximity.labs.qcounter;
 
-import com.proximity.labs.qcounter.JWTAuthorizationFilter;
+import com.proximity.labs.qcounter.security.JWTAuthorizationFilter;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

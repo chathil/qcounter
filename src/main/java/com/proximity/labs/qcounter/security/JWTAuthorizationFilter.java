@@ -1,4 +1,4 @@
-package com.proximity.labs.qcounter;
+package com.proximity.labs.qcounter.security;
 
 import java.io.IOException;
 import java.util.List;
