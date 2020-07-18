@@ -27,7 +27,7 @@ public class QcounterApplication {
 			http.csrf().disable()
 				.addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
 				.authorizeRequests()
-				.antMatchers(HttpMethod.POST, "/auth/**").permitAll()
+				.antMatchers("/auth/**").permitAll()
 				.anyRequest().authenticated();
 		}
 	}

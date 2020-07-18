@@ -109,6 +109,7 @@ public class AuthController {
 				.setExpiration(new Date(System.currentTimeMillis() + 600000))
 				.signWith(SignatureAlgorithm.HS512,
 						secretKey.getBytes()).compact();
+						
 
 		return "Bearer " + token;
 	}
