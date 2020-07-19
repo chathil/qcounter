@@ -13,22 +13,19 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @SpringBootApplication
 public class QcounterApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(QcounterApplication.class, args);
-	}
+  public static void main(String[] args) {
+    SpringApplication.run(QcounterApplication.class, args);
+  }
 
-	@EnableWebSecurity
-	@Configuration
-	class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+  @EnableWebSecurity
+  @Configuration
+  class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-		@Override
-		protected void configure(HttpSecurity http) throws Exception {
-			http.csrf().disable()
-				.addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
-				.authorizeRequests()
-				.antMatchers("/auth/guest", "/auth/signin", "/auth/signup").permitAll()
-				.anyRequest().authenticated();
-		}
-	}
-	
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+      http.csrf().disable().addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
+          .authorizeRequests().antMatchers("/**").permitAll().anyRequest().authenticated();
+    }
+  }
+
 }
