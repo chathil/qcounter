@@ -11,6 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.proximity.labs.qcounter.advice;
 
 import org.apache.log4j.Logger;
