@@ -42,9 +42,10 @@ public class UserController {
   }
 
   @PatchMapping("/ava")
-  public String ava() {
+  public String ava(@CurrentUser User customUserDetails) {
     // @Yusup
     // TODO upload file pindah disini
+    logger.info(customUserDetails.getName());
     return null;
   }
 
