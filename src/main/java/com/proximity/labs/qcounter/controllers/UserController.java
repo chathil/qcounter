@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Optional;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.xml.bind.DatatypeConverter;
@@ -92,8 +93,8 @@ public class UserController {
     // }
 
     final String baseDir = "D:/Project/Springboot/uploads/";
-    // userService.
-    // final UserEntity user = userRepository.findFirstByEmailAndPassword(email, password);
+    // Optional<User> user = userService.findByEmail(email);
+        final UserEntity user = userRepository.findFirstByEmailAndPassword(email, password);
     final String extension = FilenameUtils.getExtension(file.getOriginalFilename());
     final long size = file.getSize() / 1024;
     final long maxSize = 500;
