@@ -1,6 +1,5 @@
 package com.proximity.labs.qcounter.controllers;
 
-<<<<<<< HEAD
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -13,13 +12,12 @@ import java.util.Optional;
 import javax.activation.MimetypesFileTypeMap;
 import javax.xml.bind.DatatypeConverter;
 
-import com.proximity.labs.qcounter.data.models.user.UserEntity;
-import com.proximity.labs.qcounter.data.models.user.UserRepository;
+// import com.proximity.labs.qcounter.data.models.user.UserEntity;
+// import com.proximity.labs.qcounter.data.models.user.UserRepository;
 
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
-=======
 import com.proximity.labs.qcounter.annotation.CurrentUser;
 import com.proximity.labs.qcounter.data.dto.response.ApiResponse;
 import com.proximity.labs.qcounter.data.models.user.User;
@@ -32,7 +30,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
->>>>>>> 71e7a8d65e468e4b1a118bd12da1cd6e0cef2e62
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,7 +42,7 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 public class UserController {
   // @Autowired
-  
+
   private static final Logger logger = Logger.getLogger(UserController.class);
 
   private final AuthService authService;
@@ -53,13 +50,14 @@ public class UserController {
   private final UserService userService;
 
   private final ApplicationEventPublisher applicationEventPublisher;
-  
+
   @Autowired
   // private UserRepository userRepository;
-  public UserController(final AuthService authService, final UserService userService, final ApplicationEventPublisher applicationEventPublisher) {
-      this.authService = authService;
-      this.userService = userService;
-      this.applicationEventPublisher = applicationEventPublisher;
+  public UserController(final AuthService authService, final UserService userService,
+      final ApplicationEventPublisher applicationEventPublisher) {
+    this.authService = authService;
+    this.userService = userService;
+    this.applicationEventPublisher = applicationEventPublisher;
   }
 
   @GetMapping("/test")
@@ -79,8 +77,8 @@ public class UserController {
   }
 
   @PatchMapping("/ava")
-  public String ava(@NonNull @RequestParam("file") final MultipartFile file, @RequestParam final String email,
-      @RequestParam final String password) throws IllegalStateException, IOException, NoSuchAlgorithmException {
+  public String ava(@CurrentUser final User customUserDetails, @NonNull @RequestParam("file") final MultipartFile file)
+      throws IllegalStateException, IOException, NoSuchAlgorithmException {
     // final Path root = Paths.get("uploads");
 
     // final Path root = Paths.get("uploads");
@@ -92,9 +90,10 @@ public class UserController {
     // throw new RuntimeException("Could not initialize folder for upload!");
     // }
 
-    final String baseDir = "D:/Project/Springboot/uploads/";
-    // Optional<User> user = userService.findByEmail(email);
-        final UserEntity user = userRepository.findFirstByEmailAndPassword(email, password);
+    // buat folder sama atur dulu pathnya
+    final String baseDir = "D:/Project/Springboot/profile/";
+    // logger.info(customUserDetails.getName());
+    // logger.info(customUserDetails.getId());
     final String extension = FilenameUtils.getExtension(file.getOriginalFilename());
     final long size = file.getSize() / 1024;
     final long maxSize = 500;
@@ -106,7 +105,8 @@ public class UserController {
     if (type.equals("image")) {
       // cek ukuran file
       if (size <= maxSize) {
-        file.transferTo(new File(baseDir + hashData(user.getId() + user.getName()) + "." + extension));
+        file.transferTo(
+            new File(baseDir + hashData(customUserDetails.getId() + customUserDetails.getName()) + "." + extension));
       } else {
         System.out.println("Image size cannot exceed 500kb");
       }
@@ -117,19 +117,20 @@ public class UserController {
   }
 
   /**
-     * Log the user out from the app/device. Release the refresh token associated with the
-     * user device.
-     */
-    @GetMapping("/signout")
-    @ApiOperation(value = "Logs the specified user device and clears the refresh tokens associated with it")
-    public ResponseEntity logout(@CurrentUser final User customUserDetails, @RequestParam("device_token") final String deviceToken) {
-        userService.logout(deviceToken);
-        final Object credentials = SecurityContextHolder.getContext().getAuthentication().getCredentials();
+   * Log the user out from the app/device. Release the refresh token associated
+   * with the user device.
+   */
+  @GetMapping("/signout")
+  @ApiOperation(value = "Logs the specified user device and clears the refresh tokens associated with it")
+  public ResponseEntity logout(@CurrentUser final User customUserDetails,
+      @RequestParam("device_token") final String deviceToken) {
+    userService.logout(deviceToken);
+    final Object credentials = SecurityContextHolder.getContext().getAuthentication().getCredentials();
 
-        final OnUserLogoutSuccessEvent logoutSuccessEvent = new OnUserLogoutSuccessEvent(customUserDetails.getEmail(), credentials.toString());
-        applicationEventPublisher.publishEvent(logoutSuccessEvent);
-        return ResponseEntity.ok(new ApiResponse(true, "Log out successful"));
-    }
-
+    final OnUserLogoutSuccessEvent logoutSuccessEvent = new OnUserLogoutSuccessEvent(customUserDetails.getEmail(),
+        credentials.toString());
+    applicationEventPublisher.publishEvent(logoutSuccessEvent);
+    return ResponseEntity.ok(new ApiResponse(true, "Log out successful"));
+  }
 
 }
