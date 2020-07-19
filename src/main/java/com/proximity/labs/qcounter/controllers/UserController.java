@@ -1,5 +1,6 @@
 package com.proximity.labs.qcounter.controllers;
 
+<<<<<<< HEAD
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,6 +18,20 @@ import com.proximity.labs.qcounter.data.models.user.UserRepository;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
+=======
+import com.proximity.labs.qcounter.annotation.CurrentUser;
+import com.proximity.labs.qcounter.data.dto.response.ApiResponse;
+import com.proximity.labs.qcounter.data.models.user.User;
+import com.proximity.labs.qcounter.event.OnUserLogoutSuccessEvent;
+import com.proximity.labs.qcounter.service.AuthService;
+import com.proximity.labs.qcounter.service.UserService;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+>>>>>>> 71e7a8d65e468e4b1a118bd12da1cd6e0cef2e62
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,10 +39,27 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 public class UserController {
+  // @Autowired
+  
+  private static final Logger logger = Logger.getLogger(UserController.class);
+
+  private final AuthService authService;
+
+  private final UserService userService;
+
+  private final ApplicationEventPublisher applicationEventPublisher;
+  
   @Autowired
-  private UserRepository userRepository;
+  // private UserRepository userRepository;
+  public UserController(final AuthService authService, final UserService userService, final ApplicationEventPublisher applicationEventPublisher) {
+      this.authService = authService;
+      this.userService = userService;
+      this.applicationEventPublisher = applicationEventPublisher;
+  }
 
   @GetMapping("/test")
   public String test(@RequestParam final String name) {
@@ -60,14 +92,15 @@ public class UserController {
     // }
 
     final String baseDir = "D:/Project/Springboot/uploads/";
-    final UserEntity user = userRepository.findFirstByEmailAndPassword(email, password);
+    // userService.
+    // final UserEntity user = userRepository.findFirstByEmailAndPassword(email, password);
     final String extension = FilenameUtils.getExtension(file.getOriginalFilename());
     final long size = file.getSize() / 1024;
     final long maxSize = 500;
 
-    File f = new File(file.getOriginalFilename());
-    String mimetype = new MimetypesFileTypeMap().getContentType(f);
-    String type = mimetype.split("/")[0];
+    final File f = new File(file.getOriginalFilename());
+    final String mimetype = new MimetypesFileTypeMap().getContentType(f);
+    final String type = mimetype.split("/")[0];
     // cek file yang di upload gambar atau bukan
     if (type.equals("image")) {
       // cek ukuran file
@@ -81,5 +114,21 @@ public class UserController {
     }
     return null;
   }
+
+  /**
+     * Log the user out from the app/device. Release the refresh token associated with the
+     * user device.
+     */
+    @GetMapping("/signout")
+    @ApiOperation(value = "Logs the specified user device and clears the refresh tokens associated with it")
+    public ResponseEntity logout(@CurrentUser final User customUserDetails, @RequestParam("device_token") final String deviceToken) {
+        userService.logout(deviceToken);
+        final Object credentials = SecurityContextHolder.getContext().getAuthentication().getCredentials();
+
+        final OnUserLogoutSuccessEvent logoutSuccessEvent = new OnUserLogoutSuccessEvent(customUserDetails.getEmail(), credentials.toString());
+        applicationEventPublisher.publishEvent(logoutSuccessEvent);
+        return ResponseEntity.ok(new ApiResponse(true, "Log out successful"));
+    }
+
 
 }
