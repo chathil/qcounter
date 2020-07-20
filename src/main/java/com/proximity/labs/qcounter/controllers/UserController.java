@@ -40,7 +40,7 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
 import io.swagger.annotations.ApiOperation;
-import io.swagger.models.Path;
+// import io.swagger.models.Path;
 
 @RestController
 public class UserController {
@@ -83,12 +83,16 @@ public class UserController {
   public String ava(@CurrentUser final User customUserDetails, @NonNull @RequestParam("file") final MultipartFile file)
       throws IllegalStateException, IOException, NoSuchAlgorithmException, URISyntaxException {
 
-    // path di luar folder project(buat folder sama atur dulu pathnya)
+    // awal atur path (langkah ke 1 dari 3 langkah)
+    // jika ingin path di luar folder project(buat folder sama atur dulu pathnya)
     // final String baseDir = "D:/Project/Springboot/profile";
+    // jika ingin path didalam folder project
+    final Path baseDir = Paths.get("src/main/resources/profile/");
+    // akhir atur path
 
-    // path didalam folder project
-    final String baseDir = System.getProperty("user.dir") + File.separator + "src" + File.separator + "main"
-        + File.separator + "resources" + File.separator + "profile";
+    // final String baseDir = System.getProperty("user.dir") + File.separator +
+    // "src" + File.separator + "main"
+    // + File.separator + "resources" + File.separator + "profile";
 
     final String extension = FilenameUtils.getExtension(file.getOriginalFilename());
     final long size = file.getSize() / 1024;
@@ -101,18 +105,34 @@ public class UserController {
     if (type.equals("image")) {
       // cek ukuran file
       if (size <= maxSize) {
-        final File directory = new File(baseDir);
+
+        // awal atur path (langkah ke 2 dari 3 langkah)
+        // final File directory = new File(baseDir);
+        // comment baris dibawah dan uncomment baris diatas jika ingin menyimpan image
+        // di luar folder project
+        final File directory = new File(baseDir.toAbsolutePath().toString());
+        // akhir atur path
+
         final File[] files = directory.listFiles();
-        //cek + hapus jika file dengan nama yg sama sudah ada dalam folder
+        // cek + hapus jika file dengan nama yg sama sudah ada dalam folder
         for (final File fl : files) {
           if (fl.getName().contains(hashData(customUserDetails.getId() + customUserDetails.getName()))) {
             fl.delete();
             break;
           }
         }
-        //memasukkan file ke dalam folder path
-        file.transferTo(new File(
-            baseDir + "/" + hashData(customUserDetails.getId() + customUserDetails.getName()) + "." + extension));
+
+        // awal atur path (langkah ke 3 dari 3 langkah)
+        // file.transferTo(new File(
+        // baseDir + "/" + hashData(customUserDetails.getId() +
+        // customUserDetails.getName()) + "." + extension));
+        // memasukkan file ke dalam folder path yg ada didalam folder project(comment
+        // baris dibawah dan uncommet baris diatas jika ingin menyimpan image diluar
+        // folder project)
+        file.transferTo(new File(baseDir.toAbsolutePath().toString() + "/"
+            + hashData(customUserDetails.getId() + customUserDetails.getName()) + "." + extension));
+        // akhir atur path
+
       } else {
         System.out.println("Image size cannot exceed 500kb");
       }
