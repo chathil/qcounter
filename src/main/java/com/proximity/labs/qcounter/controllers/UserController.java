@@ -2,6 +2,7 @@ package com.proximity.labs.qcounter.controllers;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -26,6 +27,7 @@ import com.proximity.labs.qcounter.service.AuthService;
 import com.proximity.labs.qcounter.service.UserService;
 
 import org.apache.log4j.Logger;
+import org.apache.tomcat.jni.Directory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +40,7 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.Path;
 
 @RestController
 public class UserController {
@@ -78,22 +81,15 @@ public class UserController {
 
   @PatchMapping("/ava")
   public String ava(@CurrentUser final User customUserDetails, @NonNull @RequestParam("file") final MultipartFile file)
-      throws IllegalStateException, IOException, NoSuchAlgorithmException {
-    // final Path root = Paths.get("uploads");
+      throws IllegalStateException, IOException, NoSuchAlgorithmException, URISyntaxException {
 
-    // final Path root = Paths.get("uploads");
+    // path di luar folder project(buat folder sama atur dulu pathnya)
+    // final String baseDir = "D:/Project/Springboot/profile";
 
-    // try {
-    // Files.createDirectory(root);
+    // path didalam folder project
+    final String baseDir = System.getProperty("user.dir") + File.separator + "src" + File.separator + "main"
+        + File.separator + "resources" + File.separator + "profile";
 
-    // } catch (IOException e) {
-    // throw new RuntimeException("Could not initialize folder for upload!");
-    // }
-
-    // buat folder sama atur dulu pathnya
-    final String baseDir = "D:/Project/Springboot/profile/";
-    // logger.info(customUserDetails.getName());
-    // logger.info(customUserDetails.getId());
     final String extension = FilenameUtils.getExtension(file.getOriginalFilename());
     final long size = file.getSize() / 1024;
     final long maxSize = 500;
@@ -105,8 +101,16 @@ public class UserController {
     if (type.equals("image")) {
       // cek ukuran file
       if (size <= maxSize) {
-        file.transferTo(
-            new File(baseDir + hashData(customUserDetails.getId() + customUserDetails.getName()) + "." + extension));
+        final File directory = new File(baseDir);
+        final File[] files = directory.listFiles();
+        for (final File fl : files) {
+          if (fl.getName().contains(hashData(customUserDetails.getId() + customUserDetails.getName()))) {
+            fl.delete();
+            break;
+          }
+        }
+        file.transferTo(new File(
+            baseDir + "/" + hashData(customUserDetails.getId() + customUserDetails.getName()) + "." + extension));
       } else {
         System.out.println("Image size cannot exceed 500kb");
       }
