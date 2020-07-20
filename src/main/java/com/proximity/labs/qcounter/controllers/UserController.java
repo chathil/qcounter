@@ -103,12 +103,14 @@ public class UserController {
       if (size <= maxSize) {
         final File directory = new File(baseDir);
         final File[] files = directory.listFiles();
+        //cek + hapus jika file dengan nama yg sama sudah ada dalam folder
         for (final File fl : files) {
           if (fl.getName().contains(hashData(customUserDetails.getId() + customUserDetails.getName()))) {
             fl.delete();
             break;
           }
         }
+        //memasukkan file ke dalam folder path
         file.transferTo(new File(
             baseDir + "/" + hashData(customUserDetails.getId() + customUserDetails.getName()) + "." + extension));
       } else {
