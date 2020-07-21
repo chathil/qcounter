@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+import com.proximity.labs.qcounter.data.dto.request.SignupRequest;
 import com.proximity.labs.qcounter.data.dto.request.TokenRefreshRequest;
 import com.proximity.labs.qcounter.data.models.token.RefreshToken;
 import com.proximity.labs.qcounter.data.models.user.User;
@@ -61,16 +62,14 @@ public class AuthService {
         return tokenProvider.generateTokenFromUserId(userId);
     }
 
-    public Optional<User> signUp(String deviceToken, String ipAddress, String name, String email,
-            String password) {
-        String newRegistrationRequestEmail = email;
+    public Optional<User> signUp(SignupRequest signupRequest) {
+        String newRegistrationRequestEmail = signupRequest.getEmail();
         if (emailAlreadyExists(newRegistrationRequestEmail)) {
             logger.error("Email already exists: " + newRegistrationRequestEmail);
             throw new ResourceAlreadyInUseException("Email", "Address", newRegistrationRequestEmail);
         }
-
         logger.info("Trying to register new user [" + newRegistrationRequestEmail + "]");
-        User newUser = userService.save(new User(name, email, passwordEncoder.encode(password), ipAddress));
+        User newUser = userService.save(new User(signupRequest.getName(), signupRequest.getEmail(), passwordEncoder.encode(signupRequest.getPassword()), signupRequest.getIpAddress()));
         return Optional.ofNullable(newUser);
     }
 

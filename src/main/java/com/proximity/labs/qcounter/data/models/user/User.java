@@ -1,9 +1,11 @@
 package com.proximity.labs.qcounter.data.models.user;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,10 +14,15 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.JoinColumn;
 
 import com.proximity.labs.qcounter.data.models.audit.DateAudit;
+import com.proximity.labs.qcounter.data.models.queue.InQueue;
+import com.proximity.labs.qcounter.data.models.role.Role;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -41,8 +48,8 @@ public class User extends DateAudit implements UserDetails {
     this.email = user.getEmail();
     this.password = user.getPassword();
     this.ipAddress = user.getIpAddress();
-    this.accountType = user.getAccountType();
     this.setIsActive(user.getIsActive());
+    this.roles = user.getRoles();
   }
 
   public User() {
@@ -65,9 +72,6 @@ public class User extends DateAudit implements UserDetails {
   @Column(name = "ip_address", nullable = false)
   private String ipAddress;
 
-  @Column(name = "account_type", nullable = false)
-  private AccountType accountType = AccountType.SIGNED;
-
   @Column(name = "profile_completion", nullable = false)
   private int profileCompletion = 10;
 
@@ -76,6 +80,15 @@ public class User extends DateAudit implements UserDetails {
 
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<UserDevice> userDevice;
+
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  private List<InQueue> queues;
+
+  @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+  @JoinTable(name = "user_authority", joinColumns = {
+      @JoinColumn(name = "user_id", referencedColumnName = "id") }, inverseJoinColumns = {
+          @JoinColumn(name = "role_id", referencedColumnName = "id") })
+  private Set<Role> roles = new HashSet<>();
 
   public Long getId() {
     return id;
@@ -95,14 +108,6 @@ public class User extends DateAudit implements UserDetails {
 
   public String getIpAddress() {
     return ipAddress;
-  }
-
-  public AccountType getAccountType() {
-    return accountType;
-  }
-
-  public void setAccountType(AccountType accountType) {
-    this.accountType = accountType;
   }
 
   public int getProfileCompletion() {
@@ -133,59 +138,79 @@ public class User extends DateAudit implements UserDetails {
     this.isActive = isActive;
   }
 
+  public Set<Role> getRoles() {
+    return roles;
+  }
+
+  public void setRoles(Set<Role> authorities) {
+    roles = authorities;
+  }
+
+  public void addRole(Role role) {
+    roles.add(role);
+    role.getUserList().add(this);
+  }
+
+  public void addRoles(Set<Role> roles) {
+    roles.forEach(this::addRole);
+  }
+
+  public void removeRole(Role role) {
+    roles.remove(role);
+    role.getUserList().remove(this);
+  }
+
   @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<SimpleGrantedAuthority> auth = new ArrayList<SimpleGrantedAuthority>();
-        auth.add(new SimpleGrantedAuthority(getAccountType().name()));
-        return auth;
-    }
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    return getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getRole().name()))
+        .collect(Collectors.toList());
+  }
 
-    @Override
-    public String getPassword() {
-        return password;
-    }
+  @Override
+  public String getPassword() {
+    return password;
+  }
 
-    @Override
-    public String getUsername() {
-        return getName();
-    }
+  @Override
+  public String getUsername() {
+    return getName();
+  }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
+  @Override
+  public boolean isAccountNonExpired() {
+    return true;
+  }
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return getIsActive();
-    }
+  @Override
+  public boolean isAccountNonLocked() {
+    return getIsActive();
+  }
 
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return true;
+  }
 
+  @Override
+  public int hashCode() {
+    return Objects.hash(getId());
+  }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId());
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == this) {
+      return true;
     }
+    if (obj == null || getClass() != obj.getClass()) {
+      return false;
+    }
+    User that = (User) obj;
+    return Objects.equals(getId(), that.getId());
+  }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        User that = (User) obj;
-        return Objects.equals(getId(), that.getId());
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
+  @Override
+  public boolean isEnabled() {
+    return true;
+  }
 
 }

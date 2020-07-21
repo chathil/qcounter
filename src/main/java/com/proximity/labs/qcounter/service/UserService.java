@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import com.proximity.labs.qcounter.data.models.role.Role;
 import com.proximity.labs.qcounter.data.models.user.User;
 import com.proximity.labs.qcounter.data.models.user.UserDevice;
 import com.proximity.labs.qcounter.data.repositories.UserRepository;
@@ -37,12 +38,14 @@ public class UserService implements UserDetailsService{
     private final UserRepository userRepository;
     private final UserDeviceService userDeviceService;
     private final RefreshTokenService refreshTokenService;
+    private final RoleService roleService;
 
     @Autowired
-    public UserService(UserRepository userRepository, UserDeviceService userDeviceService, RefreshTokenService refreshTokenService) {
+    public UserService(UserRepository userRepository, UserDeviceService userDeviceService, RoleService roleService ,RefreshTokenService refreshTokenService) {
         this.userRepository = userRepository;
         this.userDeviceService = userDeviceService;
         this.refreshTokenService = refreshTokenService;
+        this.roleService = roleService;
     }
 
     /**
@@ -70,6 +73,8 @@ public class UserService implements UserDetailsService{
      * Save the user to the database
      */
     public User save(User user) {
+        Boolean isNewUserAsAdmin = false;
+        user.addRoles(getRolesForNewUser(isNewUserAsAdmin));
         return userRepository.save(user);
     }
 
@@ -106,5 +111,19 @@ public class UserService implements UserDetailsService{
         logger.info("Fetched user : " + dbUser + " by " + id);
         return dbUser.map(User::new)
                 .orElseThrow(() -> new UsernameNotFoundException("Couldn't find a matching user id in the database for " + id));
+    }
+
+    /**
+     * Performs a quick check to see what roles the new user could be assigned to.
+     *
+     * @return list of roles for the new user
+     */
+    private Set<Role> getRolesForNewUser(Boolean isToBeMadeAdmin) {
+        Set<Role> newUserRoles = new HashSet<>(roleService.findAll());
+        if (!isToBeMadeAdmin) {
+            newUserRoles.removeIf(Role::isAdminRole);
+        }
+        logger.info("Setting user roles: " + newUserRoles);
+        return newUserRoles;
     }
 }

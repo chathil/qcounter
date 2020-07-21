@@ -6,7 +6,6 @@ import com.proximity.labs.qcounter.data.models.token.RefreshToken;
 import com.proximity.labs.qcounter.data.models.user.UserDevice;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface UserDeviceRepository extends JpaRepository<UserDevice, Long> {

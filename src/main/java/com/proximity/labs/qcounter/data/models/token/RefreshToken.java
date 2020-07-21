@@ -29,7 +29,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import java.time.Instant;
 
-@Entity(name = "REFRESH_TOKEN")
+@Entity(name = "refresh_tokens")
 public class RefreshToken extends DateAudit {
 
     @Id

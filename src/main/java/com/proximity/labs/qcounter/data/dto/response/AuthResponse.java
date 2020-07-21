@@ -1,7 +1,10 @@
 package com.proximity.labs.qcounter.data.dto.response;
 
+import java.util.List;
+import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.proximity.labs.qcounter.data.models.user.AccountType;
+import com.proximity.labs.qcounter.data.models.role.Role;
 
 import org.springframework.beans.factory.annotation.Value;
 
@@ -21,13 +24,12 @@ public class AuthResponse {
     private long expiryDuration;
     @JsonProperty("ip_address")
     private String ipAddress;
+    private Set<Role> roles;
     private String name;
     private String email;
     @JsonProperty("profile_picture")
     private String profilePicture;
     private String location;
-    @JsonProperty("account_type")
-    private AccountType accountType;
     @JsonProperty("profile_completion")
     private int profileCompletion;
     @JsonProperty("next_queue")
@@ -35,8 +37,8 @@ public class AuthResponse {
     @JsonProperty("your_queue")
     private String yourQueue = null;
 
-    public AuthResponse(long id, String hexId, String deviceToken, String refreshToken, String accessToken, long expiryDuration, String ipAddress, String name, String email,
-            String profilePicture, String location, AccountType accountType, int profileCompletion) {
+    public AuthResponse(long id, String hexId, String deviceToken, String refreshToken, String accessToken, long expiryDuration, String ipAddress, Set<Role> roles, String name, String email,
+            String profilePicture, String location, int profileCompletion) {
         this.id = id;
         this.hexId = hexId;
         this.deviceToken = deviceToken;
@@ -48,8 +50,8 @@ public class AuthResponse {
         this.email = email;
         this.profilePicture = profilePicture;
         this.location = location;
-        this.accountType = accountType;
         this.profileCompletion = profileCompletion;
+        this.roles = roles;
     }
 
     public long getId() {
@@ -68,8 +70,6 @@ public class AuthResponse {
         return ipAddress;
     }
 
-    
-
     public String getName() {
         return name;
     }
@@ -84,10 +84,6 @@ public class AuthResponse {
 
     public String getLocation() {
         return location;
-    }
-
-    public AccountType getAccountType() {
-        return accountType;
     }
 
     public int getProfileCompletion() {
@@ -134,4 +130,7 @@ public class AuthResponse {
         this.expiryDuration = expiryDuration;
     }
 
+    public Set<Role> getRoles() {
+        return roles;
+    }
 }
