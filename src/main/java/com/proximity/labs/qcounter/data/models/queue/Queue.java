@@ -12,11 +12,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.proximity.labs.qcounter.data.models.audit.DateAudit;
+import com.proximity.labs.qcounter.data.models.user.User;
 
 
 @Entity
@@ -72,7 +74,11 @@ public class Queue extends DateAudit {
     CascadeType.ALL)
     private List<InQueue> inQueues;
 
-    public Queue(String clientGeneratedId, String name, String desc, Integer maxCapacity, Integer incrementBy, Date validUntil, String contact,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_user_id", nullable = false)
+    private User owner;
+
+    public Queue(User owner, String clientGeneratedId, String name, String desc, Integer maxCapacity, Integer incrementBy, Date validUntil, String contact,
             Boolean isClosedQueue, String location) {
         this.name = name;
         this.desc = desc;
@@ -83,7 +89,10 @@ public class Queue extends DateAudit {
         this.isClosedQueue = isClosedQueue;
         this.location = location;
         this.clientGeneratedId = clientGeneratedId;
+        this.owner = owner;
     }
+
+    
 
     public Long getId() {
         return id;
@@ -125,10 +134,6 @@ public class Queue extends DateAudit {
         return queueStats;
     }
 
-    // public List<InQueue> getInQueues() {
-    // return inQueues;
-    // }
-
     public void setQueueStats(QueueStats queueStats) {
         this.queueStats = queueStats;
     }
@@ -141,5 +146,7 @@ public class Queue extends DateAudit {
         this.clientGeneratedId = clientGeneratedId;
     }
 
-    
+    public User getOwner() {
+        return owner;
+    }    
 }

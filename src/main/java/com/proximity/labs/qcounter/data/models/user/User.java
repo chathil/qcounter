@@ -22,6 +22,7 @@ import javax.persistence.JoinColumn;
 
 import com.proximity.labs.qcounter.data.models.audit.DateAudit;
 import com.proximity.labs.qcounter.data.models.queue.InQueue;
+import com.proximity.labs.qcounter.data.models.queue.Queue;
 import com.proximity.labs.qcounter.data.models.role.Role;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -83,6 +84,9 @@ public class User extends DateAudit implements UserDetails {
 
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<InQueue> queues;
+
+  @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  private List<Queue> myQueues;
 
   @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
   @JoinTable(name = "user_authority", joinColumns = {

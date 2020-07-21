@@ -39,13 +39,10 @@ import com.proximity.labs.qcounter.data.dto.response.ApiResponse;
 import com.proximity.labs.qcounter.exception.AppException;
 import com.proximity.labs.qcounter.exception.BadRequestException;
 import com.proximity.labs.qcounter.exception.InvalidTokenRequestException;
-import com.proximity.labs.qcounter.exception.MailSendException;
 import com.proximity.labs.qcounter.exception.PasswordResetException;
-import com.proximity.labs.qcounter.exception.PasswordResetLinkException;
 import com.proximity.labs.qcounter.exception.ResourceAlreadyInUseException;
 import com.proximity.labs.qcounter.exception.ResourceNotFoundException;
 import com.proximity.labs.qcounter.exception.TokenRefreshException;
-import com.proximity.labs.qcounter.exception.UpdatePasswordException;
 import com.proximity.labs.qcounter.exception.UserLoginException;
 import com.proximity.labs.qcounter.exception.UserLogoutException;
 import com.proximity.labs.qcounter.exception.UserRegistrationException;
@@ -162,13 +159,6 @@ public class AuthControllerAdvice {
         return new ApiResponse(false, ex.getMessage(), ex.getClass().getName(), resolvePathFromWebRequest(request));
     }
 
-    @ExceptionHandler(value = PasswordResetLinkException.class)
-    @ResponseStatus(HttpStatus.EXPECTATION_FAILED)
-    @ResponseBody
-    public ApiResponse handlePasswordResetLinkException(final PasswordResetLinkException ex, final WebRequest request) {
-        return new ApiResponse(false, ex.getMessage(), ex.getClass().getName(), resolvePathFromWebRequest(request));
-    }
-
     @ExceptionHandler(value = PasswordResetException.class)
     @ResponseStatus(HttpStatus.EXPECTATION_FAILED)
     @ResponseBody
@@ -176,24 +166,10 @@ public class AuthControllerAdvice {
         return new ApiResponse(false, ex.getMessage(), ex.getClass().getName(), resolvePathFromWebRequest(request));
     }
 
-    @ExceptionHandler(value = MailSendException.class)
-    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
-    @ResponseBody
-    public ApiResponse handleMailSendException(final MailSendException ex, final WebRequest request) {
-        return new ApiResponse(false, ex.getMessage(), ex.getClass().getName(), resolvePathFromWebRequest(request));
-    }
-
     @ExceptionHandler(value = InvalidTokenRequestException.class)
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
     @ResponseBody
     public ApiResponse handleInvalidTokenException(final InvalidTokenRequestException ex, final WebRequest request) {
-        return new ApiResponse(false, ex.getMessage(), ex.getClass().getName(), resolvePathFromWebRequest(request));
-    }
-
-    @ExceptionHandler(value = UpdatePasswordException.class)
-    @ResponseStatus(HttpStatus.EXPECTATION_FAILED)
-    @ResponseBody
-    public ApiResponse handleUpdatePasswordException(final UpdatePasswordException ex, final WebRequest request) {
         return new ApiResponse(false, ex.getMessage(), ex.getClass().getName(), resolvePathFromWebRequest(request));
     }
 

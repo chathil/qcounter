@@ -21,11 +21,12 @@ public class InQueue {
 
     public InQueue() {}
 
-    public InQueue(Queue queue, User user, String contact, int queueNum) {
+    public InQueue(Queue queue, User user, String name, String contact, int queueNum) {
         this.queue = queue;
         this.user = user;
         this.contact = contact;
         this.queueNum = queueNum;
+        this.name = name;
     } 
 
     @Id
@@ -48,6 +49,9 @@ public class InQueue {
 
     @Column(name = "blocked_at", nullable = true)
     private Date blockedAt;
+
+    @Column(nullable = false)
+    private String name;
 
     @Column(nullable = false)
     private String contact;
@@ -108,6 +112,14 @@ public class InQueue {
 
     public Integer getQueueNum() {
         return queueNum;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
 }

@@ -7,6 +7,7 @@ import java.util.Optional;
 import com.proximity.labs.qcounter.data.dto.request.NewQueueRequest;
 import com.proximity.labs.qcounter.data.models.queue.Queue;
 import com.proximity.labs.qcounter.data.models.queue.QueueStats;
+import com.proximity.labs.qcounter.data.models.user.User;
 import com.proximity.labs.qcounter.data.repositories.QueueRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,15 +24,23 @@ public class QueueService {
         this.qStatsService = qStatsService;
     }
 
-    public Optional<Queue> createQueue(NewQueueRequest nQueueRequest) {
-        Date validUntil = Date.from(Instant.now().plusMillis(nQueueRequest.getValidFor()));
+    public Optional<Queue> createQueueAndPersist(User owner, NewQueueRequest nQueueRequest) {
         QueueStats qStats = qStatsService.createQueueStats();
-        Queue queue = new Queue(nQueueRequest.getClientGeneratedId(), nQueueRequest.getName(), nQueueRequest.getDesc(),
-                nQueueRequest.getMax(), nQueueRequest.getIncrementBy(), validUntil, nQueueRequest.getContact(),
-                nQueueRequest.isClosedQueue(), "Indonesia ");
+        Queue queue = createQueue(owner, nQueueRequest);
         queue.setQueueStats(qStats);
         qStats.setQueue(queue);
         queue = queueRepository.save(queue);
         return Optional.ofNullable(queue);
+    }
+
+    public Queue createQueue(User owner, NewQueueRequest nQueueRequest) {
+        Date validUntil = Date.from(Instant.now().plusMillis(nQueueRequest.getValidFor()));
+        return new Queue(owner, nQueueRequest.getClientGeneratedId(), nQueueRequest.getName(), nQueueRequest.getDesc(),
+        nQueueRequest.getMax(), nQueueRequest.getIncrementBy(), validUntil, nQueueRequest.getContact(),
+        nQueueRequest.isClosedQueue(), "Indonesia ");
+    }
+
+    public Optional<Queue> findFirstByClientGeneratedId(String clientGeneratedId) {
+        return queueRepository.findFirstByClientGeneratedId(clientGeneratedId);
     }
 }
