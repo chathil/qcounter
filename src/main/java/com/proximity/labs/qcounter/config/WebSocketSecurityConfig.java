@@ -9,8 +9,9 @@ public class WebSocketSecurityConfig extends AbstractSecurityWebSocketMessageBro
 
     @Override
     protected void configureInbound(MessageSecurityMetadataSourceRegistry messages) {
-        messages.simpDestMatchers("/secured/**").permitAll().anyMessage().permitAll();
+        messages.simpDestMatchers("/secured/**").authenticated().anyMessage().authenticated();
     }
+    
 
     /**
      * Set this to false on production env.
@@ -19,4 +20,6 @@ public class WebSocketSecurityConfig extends AbstractSecurityWebSocketMessageBro
     protected boolean sameOriginDisabled() {
         return true;
     }
+
+    
 }

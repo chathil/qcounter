@@ -101,8 +101,8 @@ public class QueueController {
      * 
      * @return
      */
-    @MessageMapping("/secured/counter")
-    @SendTo("/secured/topic/counter")
+    @MessageMapping("/guest")
+    @SendTo("/topic/counter")
     public ResponseEntity guestCounter(CounterRequest counterRequest) {
         logger.info(counterRequest.getQueueId());
         return ResponseEntity.ok(counterRequest.getQueueId());
