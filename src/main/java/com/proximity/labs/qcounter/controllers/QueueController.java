@@ -29,6 +29,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,7 +49,7 @@ public class QueueController {
     private final QueueStatsService queueStatsService;
     private final QrCodeService qrCodeService;
     private final String rootUrl;
-    private static final Logger logger = Logger.getLogger(UserController.class);
+    private static final Logger logger = Logger.getLogger(QueueController.class);
 
     @Autowired
     public QueueController(UserService userService, QueueService queueService, QueueStatsService queueStatsService,
@@ -100,8 +101,8 @@ public class QueueController {
      * 
      * @return
      */
-    @MessageMapping("/counter")
-    @SendTo("/topic/guest")
+    @MessageMapping("/secured/counter")
+    @SendTo("/secured/topic/counter")
     public ResponseEntity guestCounter(CounterRequest counterRequest) {
         logger.info(counterRequest.getQueueId());
         return ResponseEntity.ok(counterRequest.getQueueId());

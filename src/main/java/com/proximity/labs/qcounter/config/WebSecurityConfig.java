@@ -38,13 +38,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity(debug = true)
 @EnableJpaRepositories(basePackages = "com.proximity.labs.qcounter.data.repositories")
-@EnableGlobalMethodSecurity(
-        securedEnabled = true,
-        jsr250Enabled = true,
-        prePostEnabled = true)
+@EnableGlobalMethodSecurity(securedEnabled = true, jsr250Enabled = true, prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    
     private final UserService userDetailsService;
 
     private final JwtAuthenticationEntryPoint jwtEntryPoint;
@@ -79,34 +75,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors()
-                .and()
-                .csrf().disable()
-                .exceptionHandling().authenticationEntryPoint(jwtEntryPoint)
-                .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authorizeRequests()
-                .antMatchers("/",
-                		"/favicon.ico",
-                        "/**/*.json",
-                        "/**/*.xml",
-                        "/**/*.properties",
-                        "/**/*.woff2",
-                        "/**/*.woff",
-                        "/**/*.ttf",
-                        "/**/*.ttc",
-                        "/**/*.ico",
-                        "/**/*.bmp",
-                        "/**/*.png",
-                        "/**/*.gif",
-                        "/**/*.svg",
-                        "/**/*.jpg",
-                        "/**/*.jpeg",
-                        "/**/*.html",
-                        "/**/*.css",
-                        "/**/*.js").permitAll()
-                .antMatchers("/**/auth/**").permitAll()
+        http.cors().and().csrf().disable().exceptionHandling().authenticationEntryPoint(jwtEntryPoint).and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
+                .antMatchers("/", "/favicon.ico", "/**/*.json", "/**/*.xml", "/**/*.properties", "/**/*.woff2",
+                        "/**/*.woff", "/**/*.ttf", "/**/*.ttc", "/**/*.ico", "/**/*.bmp", "/**/*.png", "/**/*.gif",
+                        "/**/*.svg", "/**/*.jpg", "/**/*.jpeg", "/**/*.html", "/**/*.css", "/**/*.js")
+                .permitAll().antMatchers("/secured/**/**", "/secured/success", "/secured/socket", "/secured/success")
+                .permitAll().antMatchers("/**/auth/**").permitAll()
+
                 .anyRequest().authenticated();
 
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
