@@ -4,10 +4,12 @@ import java.util.function.Function;
 
 import com.google.zxing.qrcode.encoder.QRCode;
 import com.proximity.labs.qcounter.annotation.CurrentUser;
+import com.proximity.labs.qcounter.data.dto.request.CounterRequest;
 import com.proximity.labs.qcounter.data.dto.request.JoinQueueRequest;
 import com.proximity.labs.qcounter.data.dto.request.NewQueueRequest;
 import com.proximity.labs.qcounter.data.dto.response.JoinQueueResponse;
 import com.proximity.labs.qcounter.data.dto.response.NewQueueResponse;
+import com.proximity.labs.qcounter.data.dto.response.UserCounterResponse;
 import com.proximity.labs.qcounter.data.models.queue.InQueue;
 import com.proximity.labs.qcounter.data.models.queue.Queue;
 import com.proximity.labs.qcounter.data.models.queue.QueueStats;
@@ -24,6 +26,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -96,8 +100,11 @@ public class QueueController {
      * 
      * @return
      */
-    public ResponseEntity guestCounter() {
-        return ResponseEntity.ok("");
+    @MessageMapping("/counter")
+    @SendTo("/topic/guest")
+    public ResponseEntity guestCounter(CounterRequest counterRequest) {
+        logger.info(counterRequest.getQueueId());
+        return ResponseEntity.ok(counterRequest.getQueueId());
     }
 
     /**
