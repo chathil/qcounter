@@ -26,8 +26,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -101,8 +99,6 @@ public class QueueController {
      * 
      * @return
      */
-    @MessageMapping("/guest")
-    @SendTo("/topic/counter")
     public ResponseEntity guestCounter(CounterRequest counterRequest) {
         logger.info(counterRequest.getQueueId());
         return ResponseEntity.ok(counterRequest.getQueueId());
@@ -116,6 +112,8 @@ public class QueueController {
     public ResponseEntity ownerCounter() {
         return ResponseEntity.ok("");
     }
+
+    
 
     /**
      * Join a queue

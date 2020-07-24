@@ -10,11 +10,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 
-import javax.activation.MimetypesFileTypeMap;
-import javax.xml.bind.DatatypeConverter;
 
-// import com.proximity.labs.qcounter.data.models.user.UserEntity;
-// import com.proximity.labs.qcounter.data.models.user.UserRepository;
 
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +38,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+
+import javax.activation.MimetypesFileTypeMap;
 // import io.swagger.models.Path;
 
 @Api(value = "User Rest API", description = "Defines endpoints for the logged in user.this enpoints served functions related to user management. It's secured by default")

@@ -7,17 +7,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.http.converter.BufferedImageHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
+
 import java.awt.image.BufferedImage;
 
 @SpringBootApplication
-@EntityScan(basePackageClasses = { QcounterApplication.class, Jsr310JpaConverters.class })
+@EntityScan(basePackageClasses = {QcounterApplication.class, Jsr310JpaConverters.class})
 public class QcounterApplication {
 
-  public static void main(String[] args) {
-    SpringApplication.run(QcounterApplication.class, args);
-  }
+    public static void main(String[] args) {
+        SpringApplication.run(QcounterApplication.class, args);
+    }
 
-  @Bean
+    @Bean
     public HttpMessageConverter<BufferedImage> createImageHttpMessageConverter() {
         return new BufferedImageHttpMessageConverter();
     }

@@ -1,0 +1,21 @@
+### Login Yusup
+GET http://localhost:8080/auth/signin
+Content-Type: application/json
+
+{
+  "device_token": "intel",
+  "ip_address": "1231123",
+  "email": "yusup@gmail.com",
+  "password": "password"
+}
+
+### Login Chathil
+GET http://localhost:8080/auth/signin
+Content-Type: application/json
+
+{
+  "device_token": "intels",
+  "ip_address": "1231123",
+  "email": "chathil98@gmail.com",
+  "password": "password"
+}

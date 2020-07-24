@@ -1,6 +1,6 @@
 package com.proximity.labs.qcounter.advice;
 
-import com.mysql.cj.protocol.Message;
+
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
