@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import com.proximity.labs.qcounter.data.dto.request.NewQueueRequest;
 import com.proximity.labs.qcounter.data.models.queue.Queue;
+import com.proximity.labs.qcounter.data.models.queue.QueueState;
 import com.proximity.labs.qcounter.data.models.queue.QueueStats;
 import com.proximity.labs.qcounter.data.models.user.User;
 import com.proximity.labs.qcounter.data.repositories.QueueRepository;
@@ -31,7 +32,7 @@ public class QueueService {
         queue.setQueueStats(qStats);
         qStats.setQueue(queue);
         queue = queueRepository.save(queue);
-        return Optional.ofNullable(queue);
+        return Optional.of(queue);
     }
 
     public Queue createQueue(User owner, NewQueueRequest nQueueRequest) {
@@ -43,6 +44,10 @@ public class QueueService {
 
     public Optional<Queue> findFirstByClientGeneratedId(String clientGeneratedId) {
         return queueRepository.findFirstByClientGeneratedId(clientGeneratedId);
+    }
+
+    public Queue save(Queue queue) {
+        return queueRepository.save(queue);
     }
 
     public List<Queue> findByUserOwnerId(long userId) {

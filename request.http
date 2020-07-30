@@ -59,6 +59,14 @@ Content-Type: application/json
   "password": "password"
 }
 
+### Refresh token Ihza
+GET http://localhost:8080/auth/refresh
+Content-Type: application/json
+
+{
+  "refresh_token" : "63e9be63-3508-4a97-bfdf-876493285c01"
+}
+
 ### Login Lakeesha from the hood
 GET http://localhost:8080/auth/signin
 Content-Type: application/json
