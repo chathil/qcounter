@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.proximity.labs.qcounter.component.CounterHandler;
 import com.proximity.labs.qcounter.data.dto.request.JoinQueueRequest;
 import com.proximity.labs.qcounter.data.models.queue.InQueue;
 import com.proximity.labs.qcounter.data.models.queue.Queue;
@@ -16,8 +15,6 @@ import com.proximity.labs.qcounter.data.repositories.InQueueRepository;
 import com.proximity.labs.qcounter.exception.AppException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 

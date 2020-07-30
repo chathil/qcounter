@@ -1,7 +1,8 @@
 package com.proximity.labs.qcounter.config;
 
-import com.proximity.labs.qcounter.component.CounterHandler;
+import com.proximity.labs.qcounter.component.CounterSocketHandler;
 
+import com.proximity.labs.qcounter.service.CounterSocketService;
 import com.proximity.labs.qcounter.service.InQueueService;
 import com.proximity.labs.qcounter.service.QueueService;
 import com.proximity.labs.qcounter.utils.CounterSocketAtrr;
@@ -28,17 +29,17 @@ public class WebSocketConfig implements WebSocketConfigurer {
      * here because constructor injection in preferable than field injection.
      */
     private final QueueService queueService;
-    private final InQueueService inQueueService;
+    private final CounterSocketService counterSocketService;
 
     @Autowired
-    public WebSocketConfig(QueueService queueService, InQueueService inQueueService) {
+    public WebSocketConfig(QueueService queueService, InQueueService inQueueService, CounterSocketService counterSocketService) {
         this.queueService = queueService;
-        this.inQueueService = inQueueService;
+        this.counterSocketService = counterSocketService;
     }
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new CounterHandler(queueService, inQueueService), "/counter/**/**").addInterceptors(queueIdInterceptor());
+        registry.addHandler(new CounterSocketHandler(queueService, counterSocketService), "/counter/**/**").addInterceptors(queueIdInterceptor());
     }
 
     /**
