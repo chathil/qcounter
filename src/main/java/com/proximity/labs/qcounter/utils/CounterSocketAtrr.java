@@ -7,6 +7,7 @@ public enum CounterSocketAtrr {
     JOIN("join"),
     CONTROL("control"),
     QUEUES("queues"),
+    MY_QUEUES("my_queues"),
 
     QUEUE_ID("queue_id"),
 

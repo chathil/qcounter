@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class CounterSocketService {
+
     private final InQueueService inQueueService;
     private final QueueService queueService;
 
@@ -49,6 +50,11 @@ public class CounterSocketService {
      */
     private final HashMap<String, Set<WebSocketSession>> queuesSessions = new HashMap<>();
 
+    /**
+     * Store all sessions from "my_queues" target path in a hashmap. The key is queue id.
+     */
+    private final HashMap<String, Set<WebSocketSession>> myQueuesSessions = new HashMap<>();
+
     public CounterSocketService(InQueueService inQueueService, QueueService queueService) {
         this.queueService = queueService;
         this.inQueueService = inQueueService;
@@ -68,6 +74,10 @@ public class CounterSocketService {
 
     public HashMap<String, Set<WebSocketSession>> getQueuesSessions() {
         return queuesSessions;
+    }
+
+    public HashMap<String, Set<WebSocketSession>> getMyQueuesSessions() {
+        return myQueuesSessions;
     }
 
     /**
@@ -207,6 +217,15 @@ public class CounterSocketService {
             }
         });
 
+        myQueuesSessions.getOrDefault(queue.getClientGeneratedId(), Set.of()).forEach(session -> {
+            User user = (User) ((Authentication) Objects.requireNonNull(session.getPrincipal())).getPrincipal();
+            try {
+                session.sendMessage(new TextMessage(notifyMyQueuesSessions(queueService.findByUserOwnerId(user.getId()))));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
     }
 
     /**
@@ -257,9 +276,37 @@ public class CounterSocketService {
                 inQs.forEach(inQueue -> putOrAdd(session, inQueue.getQueue(), queuesSessions));
                 return Optional.of(notifyQueuesSessions(inQs));
             }
+            case MY_QUEUES -> {
+                assert queue != null;
+                Set<Queue> myQs = user.getMyQueues();
+                myQs.forEach(q -> putOrAdd(session, q, myQueuesSessions));
+                return Optional.of(notifyMyQueuesSessions(myQs));
+            }
             default -> sendErrorAndCloseConnection(new ApiResponse(false, "Unknown operation"), session);
         }
         return Optional.empty();
+    }
+
+    private String notifyMyQueuesSessions(Set<Queue> myQs) {
+        List<MyQueuesCounterResponse> myQueuesCounterResponses = new ArrayList<>();
+        myQs.forEach(queue -> {
+            QueueStats qStats = queue.getQueueStats();
+            myQueuesCounterResponses.add(new MyQueuesCounterResponse(
+                    queue.getClientGeneratedId(),
+                    queue.getName(), queue.getDesc(),
+                    qStats.getCurrentQueue(),
+                    qStats.getCurrentInQueue(),
+                    queue.getIncrementBy(),
+                    queue.getValidUntil().getTime(),
+                    queue.getIsClosedQueue(),
+                    qStats.getState()));
+        });
+        try {
+            return new ObjectMapper().writeValueAsString(myQueuesCounterResponses);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return "[]";
+        }
     }
 
     private String notifyQueuesSessions(Set<InQueue> inQs) {

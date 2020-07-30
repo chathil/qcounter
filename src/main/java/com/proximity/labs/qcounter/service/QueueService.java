@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import com.proximity.labs.qcounter.data.dto.request.NewQueueRequest;
 import com.proximity.labs.qcounter.data.models.queue.Queue;
@@ -50,7 +51,7 @@ public class QueueService {
         return queueRepository.save(queue);
     }
 
-    public List<Queue> findByUserOwnerId(long userId) {
+    public Set<Queue> findByUserOwnerId(long userId) {
         return queueRepository.findByOwnerId(userId);
     }
 }
