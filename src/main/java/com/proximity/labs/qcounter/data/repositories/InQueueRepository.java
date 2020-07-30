@@ -11,7 +11,7 @@ import java.util.Set;
 
 public interface InQueueRepository extends JpaRepository<InQueue, Long> {
     List<InQueue> findByQueueIdAndQueueNumGreaterThanAndQueueNumIsLessThanEqualOrderByQueueNum(long queueId, int fromQueueNum, int toQueueNum);
-    Optional<InQueue> findByQueueIdAndUserId(long queueId, long userId);
+    Optional<InQueue> findFirstByQueueIdAndUserId(long queueId, long userId);
     Set<InQueue> findByQueueId(long queueId);
     Set<InQueue> findByUserId(long userId);
 }

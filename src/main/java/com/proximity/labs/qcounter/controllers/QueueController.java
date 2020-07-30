@@ -32,7 +32,7 @@ public class QueueController {
 
     @Autowired
     public QueueController(UserService userService, QueueService queueService, QueueStatsService queueStatsService,
-            InQueueService inQueueService, QrCodeService qrCodeService, @Value("${app.root.url}") String rootUrl) {
+                           InQueueService inQueueService, QrCodeService qrCodeService, @Value("${app.root.url}") String rootUrl) {
         this.userService = userService;
         this.queueService = queueService;
         this.inQueueService = inQueueService;
@@ -43,27 +43,27 @@ public class QueueController {
 
     /**
      * Create new queue doc by @chathil
-     * 
+     *
      * @param currentUser
      * @return @ResponseEntity
      */
     @ApiOperation(value = "Create a new queue and return the created queue without data from queue_stats table.")
     @PostMapping
     public ResponseEntity newQueue(@CurrentUser User currentUser, @RequestBody NewQueueRequest nQueueRequest) {
-        return queueService.createQueueAndPersist(currentUser ,nQueueRequest).map(newQ -> {
-            return ResponseEntity.ok(new NewQueueResponse(newQ.getClientGeneratedId(), newQ.getName(),
-                    currentUser.getName(), currentUser.getId(), newQ.getDesc(), newQ.getMaxCapacity(),
-                    newQ.getIncrementBy(), newQ.getValidUntil().toInstant().toEpochMilli(), newQ.getContact(),
-                    newQ.getIsClosedQueue(), newQ.getQueueStats().getState(), "null"));
-        }).orElseThrow(() -> new AppException(
+        if(currentUser.getMyQueues().size() > 1)
+            throw new AppException("You have reached max queue you can create. which is two");
+
+        return queueService.createQueueAndPersist(currentUser, nQueueRequest).map(newQ -> ResponseEntity.ok(new NewQueueResponse(newQ.getClientGeneratedId(), newQ.getName(),
+                currentUser.getName(), currentUser.getId(), newQ.getDesc(), newQ.getMaxCapacity(),
+                newQ.getIncrementBy(), newQ.getValidUntil().toInstant().toEpochMilli(), newQ.getContact(),
+                newQ.getIsClosedQueue(), newQ.getQueueStats().getState(), "null"))).orElseThrow(() -> new AppException(
                 String.format("Could't create [%s] due to internal error", nQueueRequest.getName())));
     }
 
     /**
-     * 
      * Return all guest readable details about this queue without currentInQueue,
      * currentQueue, and state. NOT SECURED. doc by @chathil
-     * 
+     *
      * @param queueId
      * @return
      */
@@ -79,8 +79,15 @@ public class QueueController {
      */
     @PostMapping(value = "/join")
     public ResponseEntity joinQueue(@CurrentUser User currentUser, @RequestBody JoinQueueRequest joinQueueRequest) {
+        if (currentUser.getQueues().size() > 1)
+            throw new AppException("You have reached max queue you can join. which is two");
         return inQueueService.joinQueueAndPersist(currentUser, joinQueueRequest).map(pair -> {
             Queue q = pair.getFirst();
+
+            inQueueService.findUserInQueue(q.getId(), currentUser.getId()).ifPresent(inQueue -> {
+                throw new AppException(String.format("You already joined queue with id %s", q.getClientGeneratedId()));
+            });
+
             InQueue inQ = pair.getSecond();
             User qOwner = q.getOwner();
             QueueStats qStats = q.getQueueStats();

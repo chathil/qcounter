@@ -84,7 +84,7 @@ public class InQueueService {
     }
 
     public Optional<InQueue> findUserInQueue(long queueId, long userId) {
-        return inQueueRepository.findByQueueIdAndUserId(queueId, userId);
+        return inQueueRepository.findFirstByQueueIdAndUserId(queueId, userId);
     }
 
     public Set<InQueue> findUserInQueues(long userId) {
