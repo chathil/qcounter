@@ -1,20 +1,27 @@
 package com.proximity.labs.qcounter.data.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.proximity.labs.qcounter.data.models.queue.QueueState;
 
 public class NewQueueResponse {
     
     private String id;
     private String name;
+    @JsonProperty("created_by")
     private String createdBy;
+    @JsonProperty("creator_id")
     private long creatorId;
     private String desc;
     private int max;
+    @JsonProperty("incremented_by")
     private int incrementBy;
+    @JsonProperty("valid_until")
     private Long validUntil;
     private String contact;
+    @JsonProperty("is_closed_queue")
     private boolean isClosedQueue;
     private QueueState state;
+    @JsonProperty("qr_code")
     private String qrCode;
 
     public String getId() {

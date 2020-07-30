@@ -1,15 +1,17 @@
 package com.proximity.labs.qcounter.data.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.socket.WebSocketMessage;
 
-public class JoinQueueCounterResponse{
+public class JoinQueueCounterResponse {
 
     private String id;
 
+    @JsonProperty("current_queue")
     private int currentQueue;
-
+    @JsonProperty("current_in_queue")
     private int currentInQueue;
 
     public JoinQueueCounterResponse(String id, int currentQueue, int currentInQueue) {

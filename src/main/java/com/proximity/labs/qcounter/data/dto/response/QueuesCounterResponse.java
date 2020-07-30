@@ -1,5 +1,6 @@
 package com.proximity.labs.qcounter.data.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.proximity.labs.qcounter.data.models.queue.QueueState;
@@ -8,15 +9,22 @@ public class QueuesCounterResponse {
 
     private final String id;
     private final String name;
+    @JsonProperty("created_by")
     private final String createdBy;
+    @JsonProperty("creator_id")
     private final long creatorId;
     private final String desc;
     private final int max;
+    @JsonProperty("current_num")
     private final int currentNum;
+    @JsonProperty("my_num")
     private final int myNum;
+    @JsonProperty("increment_by")
     private final int incrementBy;
+    @JsonProperty("valid_until")
     private final long validUntil;
     private final String contact;
+    @JsonProperty("is_closed_queue")
     private final boolean isClosedQueue;
     private final QueueState state;
 

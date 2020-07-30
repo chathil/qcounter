@@ -1,5 +1,6 @@
 package com.proximity.labs.qcounter.data.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.proximity.labs.qcounter.data.models.queue.QueueState;
@@ -8,15 +9,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HomeCounterResponse {
-    private NextQueueCounter nextQueueCounter;
+    @JsonProperty("next_queue_counter")
+    private NextQueueCounter next;
+    @JsonProperty("my_queues")
     private final List<MyQueue> myQueues = new ArrayList<>();
 
-    public NextQueueCounter getNextQueueCounter() {
-        return nextQueueCounter;
+    public NextQueueCounter getNext() {
+        return next;
     }
 
     public void setNextQueueCounter(String id, int myNumber, int currentNum, QueueState state) {
-        this.nextQueueCounter = new NextQueueCounter(id, myNumber, currentNum, state);
+        this.next = new NextQueueCounter(id, myNumber, currentNum, state);
     }
 
     public List<MyQueue> getMyQueues() {
@@ -40,6 +43,7 @@ public class HomeCounterResponse {
     public static final class MyQueue {
         private final String id;
         private final String name;
+        @JsonProperty("increment_by")
         private final int incrementBy;
         private final int current;
         private final int of;
@@ -85,7 +89,9 @@ public class HomeCounterResponse {
 
     public static final class NextQueueCounter {
         private final String id;
+        @JsonProperty("my_number")
         private final int myNumber;
+        @JsonProperty("current_num")
         private final int currentNum;
         private final QueueState state;
 

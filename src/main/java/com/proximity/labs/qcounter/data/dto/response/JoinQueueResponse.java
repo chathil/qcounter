@@ -1,22 +1,37 @@
 package com.proximity.labs.qcounter.data.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.proximity.labs.qcounter.data.models.queue.QueueState;
 
 public class JoinQueueResponse {
     private String id;
+    @JsonProperty("queue_name")
     private String queueName;
+    @JsonProperty("owner_name")
     private String ownerName;
+    @JsonProperty("owner_id")
     private Long ownerId;
+    @JsonProperty("queue_desc")
     private String queueDesc;
+    @JsonProperty("queue_contact")
     private String queueContact;
+    @JsonProperty("queue_max")
     private int queueMax;
+    @JsonProperty("queue_current_num")
     private int queueCurrentNum;
+    @JsonProperty("client_num")
     private int clientNum;
+    @JsonProperty("client_name")
     private String clientName;
+    @JsonProperty("client_contact")
     private String clientContact;
+    @JsonProperty("increment_by")
     private int incrementBy;
+    @JsonProperty("valid_until")
     private long validUntil;
+    @JsonProperty("is_closed_queue")
     private boolean isClosedQueue;
+    @JsonProperty("queue_state")
     private QueueState queueState;
 
     public JoinQueueResponse(String id, String queueName, String queueDesc, String queueContact, int queueMax, int queueCurrentNum,

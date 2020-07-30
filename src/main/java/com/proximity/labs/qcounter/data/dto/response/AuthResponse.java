@@ -9,13 +9,13 @@ import com.proximity.labs.qcounter.data.models.role.Role;
 import org.springframework.beans.factory.annotation.Value;
 
 public class AuthResponse {
-    private long id;
+    private final long id;
     @JsonProperty("hex_id")
     private String hexId; 
     @JsonProperty("device_token")
-    private String deviceToken;
+    private final String deviceToken;
     @JsonProperty("access_token")
-    private String accessToken;
+    private final String accessToken;
     @JsonProperty("refresh_token")
     private String refreshToken;
     @JsonProperty("token_type")
@@ -23,19 +23,19 @@ public class AuthResponse {
     @JsonProperty("expiry_duration")
     private long expiryDuration;
     @JsonProperty("ip_address")
-    private String ipAddress;
-    private Set<Role> roles;
-    private String name;
-    private String email;
+    private final String ipAddress;
+    private final Set<Role> roles;
+    private final String name;
+    private final String email;
     @JsonProperty("profile_picture")
-    private String profilePicture;
-    private String location;
+    private final String profilePicture;
+    private final String location;
     @JsonProperty("profile_completion")
-    private int profileCompletion;
+    private final int profileCompletion;
     @JsonProperty("next_queue")
-    private String nextQueue = null;
+    private final String nextQueue = null;
     @JsonProperty("your_queue")
-    private String yourQueue = null;
+    private final String yourQueue = null;
 
     public AuthResponse(long id, String hexId, String deviceToken, String refreshToken, String accessToken, long expiryDuration, String ipAddress, Set<Role> roles, String name, String email,
             String profilePicture, String location, int profileCompletion) {

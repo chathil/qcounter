@@ -1,5 +1,6 @@
 package com.proximity.labs.qcounter.data.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.proximity.labs.qcounter.data.models.queue.QueueState;
@@ -13,7 +14,9 @@ public class ControlCounterResponse {
     private final List<InQueue> next = new ArrayList<>();
     private final List<InQueue> prev = new ArrayList<>();
     private final List<InQueue> current = new ArrayList<>();
+    @JsonProperty("queue_state")
     private final QueueState queueState;
+    @JsonProperty("current_num")
     private final int currentNum;
     private final int of;
     private final int max;
