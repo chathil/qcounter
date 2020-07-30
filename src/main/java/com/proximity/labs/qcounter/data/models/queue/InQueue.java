@@ -33,7 +33,7 @@ public class InQueue {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "queue_id", nullable = false)
     private Queue queue;
 

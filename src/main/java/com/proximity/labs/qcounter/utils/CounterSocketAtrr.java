@@ -2,9 +2,11 @@ package com.proximity.labs.qcounter.utils;
 
 public enum CounterSocketAtrr {
     TARGET_PATH("target_path"),
+
     HOME("home"),
     JOIN("join"),
     CONTROL("control"),
+    QUEUES("queues"),
 
     QUEUE_ID("queue_id"),
 

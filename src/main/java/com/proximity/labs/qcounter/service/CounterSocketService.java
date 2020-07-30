@@ -3,10 +3,7 @@ package com.proximity.labs.qcounter.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.proximity.labs.qcounter.data.dto.response.ApiResponse;
-import com.proximity.labs.qcounter.data.dto.response.ControlCounterResponse;
-import com.proximity.labs.qcounter.data.dto.response.HomeCounterResponse;
-import com.proximity.labs.qcounter.data.dto.response.JoinQueueCounterResponse;
+import com.proximity.labs.qcounter.data.dto.response.*;
 import com.proximity.labs.qcounter.data.models.queue.InQueue;
 import com.proximity.labs.qcounter.data.models.queue.Queue;
 import com.proximity.labs.qcounter.data.models.queue.QueueState;
@@ -14,6 +11,7 @@ import com.proximity.labs.qcounter.data.models.queue.QueueStats;
 import com.proximity.labs.qcounter.data.models.user.User;
 import com.proximity.labs.qcounter.utils.CounterSocketAtrr;
 import org.springframework.data.util.Pair;
+import org.springframework.lang.Nullable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
@@ -34,17 +32,22 @@ public class CounterSocketService {
     /**
      * Store all sessions from "join" target path in a hashmap. The key is queue id.
      */
-    HashMap<String, Set<WebSocketSession>> joinQueueSessions = new HashMap<>();
+    private final HashMap<String, Set<WebSocketSession>> joinQueueSessions = new HashMap<>();
 
     /**
      * Store all sessions from "home" target path in a hashmap. The key is queue id.
      */
-    HashMap<String, Set<WebSocketSession>> homeSessions = new HashMap<>();
+    private final HashMap<String, Set<WebSocketSession>> homeSessions = new HashMap<>();
 
     /**
      * Store all sessions from "control" target path in a hashmap. The key is queue id.
      */
-    HashMap<String, Set<WebSocketSession>> controlSessions = new HashMap<>();
+    private final HashMap<String, Set<WebSocketSession>> controlSessions = new HashMap<>();
+
+    /**
+     * Store all sessions from "queues" target path in a hashmap. The key is queue id.
+     */
+    private final HashMap<String, Set<WebSocketSession>> queuesSessions = new HashMap<>();
 
     public CounterSocketService(InQueueService inQueueService, QueueService queueService) {
         this.queueService = queueService;
@@ -55,24 +58,16 @@ public class CounterSocketService {
         return joinQueueSessions;
     }
 
-    public void setJoinQueueSessions(HashMap<String, Set<WebSocketSession>> joinQueueSessions) {
-        this.joinQueueSessions = joinQueueSessions;
-    }
-
     public HashMap<String, Set<WebSocketSession>> getHomeSessions() {
         return homeSessions;
-    }
-
-    public void setHomeSessions(HashMap<String, Set<WebSocketSession>> homeSessions) {
-        this.homeSessions = homeSessions;
     }
 
     public HashMap<String, Set<WebSocketSession>> getControlSessions() {
         return controlSessions;
     }
 
-    public void setControlSessions(HashMap<String, Set<WebSocketSession>> controlSessions) {
-        this.controlSessions = controlSessions;
+    public HashMap<String, Set<WebSocketSession>> getQueuesSessions() {
+        return queuesSessions;
     }
 
     /**
@@ -100,14 +95,16 @@ public class CounterSocketService {
                     inQueueService.increment(queue);
                     notifyChanges(queue);
                 } else
-                    sendError(new ApiResponse(false, String.format("Queue with id %s is in %s state", queue.getClientGeneratedId(), queue.getQueueStats().getState())), session);
+                    sendError(new ApiResponse(false, String.format("Queue with id %s is in %s state",
+                            queue.getClientGeneratedId(), queue.getQueueStats().getState())), session);
             }
             case DECREMENT -> {
                 if (queue.getQueueStats().getState() == QueueState.RUNNING) {
                     inQueueService.decrement(queue);
                     notifyChanges(queue);
                 } else
-                    sendError(new ApiResponse(false, String.format("Queue with id %s is in %s state", queue.getClientGeneratedId(), queue.getQueueStats().getState())), session);
+                    sendError(new ApiResponse(false, String.format("Queue with id %s is in %s state",
+                            queue.getClientGeneratedId(), queue.getQueueStats().getState())), session);
             }
             case PAUSE -> {
                 queue.getQueueStats().setState(QueueState.PAUSED);
@@ -136,8 +133,10 @@ public class CounterSocketService {
     public void notifyChanges(Queue queue) {
 
         QueueStats qStats = queue.getQueueStats();
-        String joinMessage = new JoinQueueCounterResponse(queue.getClientGeneratedId(), qStats.getCurrentQueue(), qStats.getCurrentInQueue()).toString();
-        Map<User, InQueue> userInQueueMap = inQueueService.findByQueueId(queue.getId()).stream().collect(Collectors.toMap(InQueue::getUser, Function.identity()));
+        String joinMessage = new JoinQueueCounterResponse(queue.getClientGeneratedId(),
+                qStats.getCurrentQueue(), qStats.getCurrentInQueue()).toString();
+        Map<User, InQueue> userInQueueMap = inQueueService.findByQueueId(queue.getId())
+                .stream().collect(Collectors.toMap(InQueue::getUser, Function.identity()));
 
         List<Pair<Long, String>> current = inQueueService.getCurrent(queue);
         List<Pair<Long, String>> prev = inQueueService.getPrev(queue);
@@ -156,19 +155,34 @@ public class CounterSocketService {
         homeSessions
                 .getOrDefault(queue.getClientGeneratedId(), Set.of())
                 .forEach(session -> {
-                    User user = (User) ((Authentication) Objects.requireNonNull(session.getPrincipal())).getPrincipal();
+                    User user = (User) ((Authentication) Objects.requireNonNull(session.getPrincipal()))
+                            .getPrincipal();
                     InQueue inQ = userInQueueMap.get(user);
                     HomeCounterResponse homeCounterResponse = new HomeCounterResponse();
                     if (inQ != null)
-                        homeCounterResponse.setNextQueueCounter(queue.getClientGeneratedId(), inQ.getQueueNum(), queue.getQueueStats().getCurrentQueue(), queue.getQueueStats().getState());
+                        homeCounterResponse.setNextQueueCounter(queue.getClientGeneratedId(),
+                                inQ.getQueueNum(), queue.getQueueStats().getCurrentQueue(),
+                                queue.getQueueStats().getState());
                     else {
-                        Optional<Queue> optSubscribedQ = queueService.findFirstByClientGeneratedId(session.getAttributes().getOrDefault(CounterSocketAtrr.QUEUE_ID.label, "").toString());
+                        Optional<Queue> optSubscribedQ =
+                                queueService.findFirstByClientGeneratedId(session.getAttributes()
+                                        .getOrDefault(CounterSocketAtrr.QUEUE_ID.label, "").toString());
+
                         optSubscribedQ.ifPresent(subscribedQ -> {
-                            Optional<InQueue> userInQueue = inQueueService.findUserInQueue(subscribedQ.getId(), user.getId());
-                            userInQueue.ifPresent(value -> homeCounterResponse.setNextQueueCounter(subscribedQ.getClientGeneratedId(), value.getQueueNum(), subscribedQ.getQueueStats().getCurrentQueue(), subscribedQ.getQueueStats().getState()));
+                            Optional<InQueue> userInQueue =
+                                    inQueueService.findUserInQueue(subscribedQ.getId(), user.getId());
+                            userInQueue.ifPresent(value -> homeCounterResponse.setNextQueueCounter(
+                                    subscribedQ.getClientGeneratedId(),
+                                    value.getQueueNum(),
+                                    subscribedQ.getQueueStats().getCurrentQueue(),
+                                    subscribedQ.getQueueStats().getState()));
                         });
                     }
-                    queueService.findByUserOwnerId(user.getId()).forEach(myQ -> homeCounterResponse.setMyQueues(myQ.getClientGeneratedId(), myQ.getName(), myQ.getIncrementBy(), myQ.getQueueStats().getCurrentQueue(), myQ.getQueueStats().getCurrentInQueue()));
+                    queueService.findByUserOwnerId(user.getId()).forEach(myQ -> homeCounterResponse.setMyQueues(
+                            myQ.getClientGeneratedId(),
+                            myQ.getName(), myQ.getIncrementBy(),
+                            myQ.getQueueStats().getCurrentQueue(),
+                            myQ.getQueueStats().getCurrentInQueue()));
                     try {
                         session.sendMessage(new TextMessage(homeCounterResponse.toString()));
                     } catch (IOException e) {
@@ -183,6 +197,16 @@ public class CounterSocketService {
                 e.printStackTrace();
             }
         });
+
+        queuesSessions.getOrDefault(queue.getClientGeneratedId(), Set.of()).forEach(session -> {
+            User user = (User) ((Authentication) Objects.requireNonNull(session.getPrincipal())).getPrincipal();
+            try {
+                session.sendMessage(new TextMessage(notifyQueuesSessions(inQueueService.findUserInQueues(user.getId()))));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
     }
 
     /**
@@ -195,12 +219,17 @@ public class CounterSocketService {
      * @param targetPath session's target path
      * @return may return String or empty String
      */
-    public Optional<String> initialBroadcastMessage(WebSocketSession session, Queue queue, CounterSocketAtrr targetPath) {
+    public Optional<String> initialBroadcastMessage(WebSocketSession session, @Nullable Queue queue,
+                                                    CounterSocketAtrr targetPath) {
         User user = (User) ((Authentication) Objects.requireNonNull(session.getPrincipal())).getPrincipal();
         switch (targetPath) {
             case JOIN -> {
+                assert queue != null;
                 putOrAdd(session, queue, joinQueueSessions);
-                return Optional.ofNullable(new JoinQueueCounterResponse(queue.getClientGeneratedId(), queue.getQueueStats().getCurrentQueue(), queue.getQueueStats().getCurrentInQueue()).toString());
+                return Optional.ofNullable(new JoinQueueCounterResponse(
+                        queue.getClientGeneratedId(),
+                        queue.getQueueStats().getCurrentQueue(),
+                        queue.getQueueStats().getCurrentInQueue()).toString());
             }
             case HOME -> {
                 if (queue != null)
@@ -209,15 +238,55 @@ public class CounterSocketService {
                 return Optional.ofNullable(notifyHomeSession(queue, user, user.getMyQueues()));
             }
             case CONTROL -> {
+                assert queue != null;
                 if (verifyOwnership(session.getPrincipal(), queue)) {
                     putOrAdd(session, queue, controlSessions);
-                    return Optional.ofNullable(notifyControlSession(queue, inQueueService.getPrev(queue), inQueueService.getCurrent(queue), inQueueService.getNext(queue)));
+                    return Optional.ofNullable(notifyControlSession(
+                            queue, inQueueService.getPrev(queue),
+                            inQueueService.getCurrent(queue),
+                            inQueueService.getNext(queue)));
                 } else
-                    sendErrorAndCloseConnection(new ApiResponse(false, String.format("Queue with id %s does not belong to %s", queue.getClientGeneratedId(), session.getPrincipal().getName())), session);
+                    sendErrorAndCloseConnection(new ApiResponse(false,
+                            String.format("Queue with id %s does not belong to %s",
+                                    queue.getClientGeneratedId(),
+                                    Objects.requireNonNull(session.getPrincipal()).getName())), session);
+            }
+            case QUEUES -> {
+                assert queue != null;
+                Set<InQueue> inQs = user.getQueues();
+                inQs.forEach(inQueue -> putOrAdd(session, inQueue.getQueue(), queuesSessions));
+                return Optional.of(notifyQueuesSessions(inQs));
             }
             default -> sendErrorAndCloseConnection(new ApiResponse(false, "Unknown operation"), session);
         }
         return Optional.empty();
+    }
+
+    private String notifyQueuesSessions(Set<InQueue> inQs) {
+        List<QueuesCounterResponse> queuesCounterResponses = new ArrayList<>();
+        inQs.forEach(inQ -> {
+            Queue q = inQ.getQueue();
+            QueueStats qStats = q.getQueueStats();
+            User owner = q.getOwner();
+            queuesCounterResponses.add(new QueuesCounterResponse(
+                    q.getClientGeneratedId(),
+                    q.getName(), owner.getName(),
+                    owner.getId(), q.getDesc(),
+                    q.getMaxCapacity(),
+                    qStats.getCurrentQueue(),
+                    inQ.getQueueNum(),
+                    q.getIncrementBy(),
+                    q.getValidUntil().getTime(),
+                    q.getContact(),
+                    q.getIsClosedQueue(),
+                    qStats.getState()));
+        });
+        try {
+            return new ObjectMapper().writeValueAsString(queuesCounterResponses);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return "[]";
+        }
     }
 
     /**
@@ -233,9 +302,17 @@ public class CounterSocketService {
         HomeCounterResponse homeCounterResponse = new HomeCounterResponse();
         if (queue != null) {
             Optional<InQueue> inQ = inQueueService.findUserInQueue(queue.getId(), user.getId());
-            inQ.ifPresent(inQueue -> homeCounterResponse.setNextQueueCounter(queue.getClientGeneratedId(), inQueue.getQueueNum(), queue.getQueueStats().getCurrentQueue(), queue.getQueueStats().getState()));
+            inQ.ifPresent(inQueue -> homeCounterResponse.setNextQueueCounter(
+                    queue.getClientGeneratedId(),
+                    inQueue.getQueueNum(),
+                    queue.getQueueStats().getCurrentQueue(),
+                    queue.getQueueStats().getState()));
         }
-        myQueues.forEach(myQ -> homeCounterResponse.setMyQueues(myQ.getClientGeneratedId(), myQ.getName(), myQ.getIncrementBy(), myQ.getQueueStats().getCurrentQueue(), myQ.getQueueStats().getCurrentInQueue()));
+        myQueues.forEach(myQ -> homeCounterResponse.setMyQueues(
+                myQ.getClientGeneratedId(),
+                myQ.getName(), myQ.getIncrementBy(),
+                myQ.getQueueStats().getCurrentQueue(),
+                myQ.getQueueStats().getCurrentInQueue()));
         return homeCounterResponse.toString();
     }
 
@@ -249,7 +326,8 @@ public class CounterSocketService {
      * @param next    next user in line/ queue.
      * @return json String of @{@link ControlCounterResponse}
      */
-    public String notifyControlSession(Queue queue, List<Pair<Long, String>> prev, List<Pair<Long, String>> current, List<Pair<Long, String>> next) {
+    public String notifyControlSession(Queue queue, List<Pair<Long, String>> prev,
+                                       List<Pair<Long, String>> current, List<Pair<Long, String>> next) {
         QueueStats qStats = queue.getQueueStats();
         ControlCounterResponse controlCounterResponse =
                 new ControlCounterResponse(
@@ -324,5 +402,4 @@ public class CounterSocketService {
         User user = (User) ((Authentication) principal).getPrincipal();
         return user.getId().equals(queue.getOwner().getId());
     }
-
 }

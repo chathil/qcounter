@@ -84,8 +84,8 @@ public class User extends DateAudit implements UserDetails {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<UserDevice> userDevice;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<InQueue> queues;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<InQueue> queues = new HashSet<>();
 
     @OneToMany(mappedBy = "owner",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Queue> myQueues;

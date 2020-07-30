@@ -1,8 +1,7 @@
 package com.proximity.labs.qcounter.data.models.queue;
 
 import java.nio.IntBuffer;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -70,9 +69,9 @@ public class Queue extends DateAudit {
     @JoinColumn(name = "queue_stats_id", unique = true, referencedColumnName = "id")
     private QueueStats queueStats;
 
-    @OneToMany(mappedBy = "queue", fetch = FetchType.LAZY, cascade =
+    @OneToMany(mappedBy = "queue", fetch = FetchType.EAGER, cascade =
     CascadeType.ALL)
-    private List<InQueue> inQueues;
+    private Set<InQueue> inQueues = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "owner_user_id", nullable = false)
@@ -96,11 +95,11 @@ public class Queue extends DateAudit {
         return id;
     }
 
-    public List<InQueue> getInQueues() {
+    public Set<InQueue> getInQueues() {
         return inQueues;
     }
 
-    public void setInQueues(List<InQueue> inQueues) {
+    public void setInQueues(Set<InQueue> inQueues) {
         this.inQueues = inQueues;
     }
 

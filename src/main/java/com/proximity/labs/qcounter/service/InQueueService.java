@@ -2,6 +2,7 @@ package com.proximity.labs.qcounter.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.proximity.labs.qcounter.data.dto.request.JoinQueueRequest;
@@ -86,7 +87,11 @@ public class InQueueService {
         return inQueueRepository.findByQueueIdAndUserId(queueId, userId);
     }
 
-    public List<InQueue> findByQueueId(long queueId) {
+    public Set<InQueue> findUserInQueues(long userId) {
+        return inQueueRepository.findByUserId(userId);
+    }
+
+    public Set<InQueue> findByQueueId(long queueId) {
         return inQueueRepository.findByQueueId(queueId);
     }
 

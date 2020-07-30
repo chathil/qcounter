@@ -7,9 +7,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface InQueueRepository extends JpaRepository<InQueue, Long> {
     List<InQueue> findByQueueIdAndQueueNumGreaterThanAndQueueNumIsLessThanEqualOrderByQueueNum(long queueId, int fromQueueNum, int toQueueNum);
     Optional<InQueue> findByQueueIdAndUserId(long queueId, long userId);
-    List<InQueue> findByQueueId(long queueId);
+    Set<InQueue> findByQueueId(long queueId);
+    Set<InQueue> findByUserId(long userId);
 }
