@@ -101,7 +101,7 @@ public class AuthService {
 
         User currentUser = (User) authentication.getPrincipal();
 
-        userDeviceService.findByUserId(currentUser.getId()).map(UserDevice::getRefreshToken)
+        userDeviceService.findById(currentUser.getId()).map(UserDevice::getRefreshToken)
                 .map(RefreshToken::getId).ifPresent(refreshTokenService::deleteById);
         logger.info(currentUser.getName());
 

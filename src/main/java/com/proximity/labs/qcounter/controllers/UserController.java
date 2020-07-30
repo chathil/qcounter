@@ -40,7 +40,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 import javax.activation.MimetypesFileTypeMap;
-// import io.swagger.models.Path;
 
 @Api(value = "User Rest API", description = "Defines endpoints for the logged in user.this enpoints served functions related to user management. It's secured by default")
 @RestController("/user")

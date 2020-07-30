@@ -9,8 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface UserDeviceRepository extends JpaRepository<UserDevice, Long> {
-    @Transactional
-    Long deleteFirstByDeviceToken(String deviceToken);
 
     Optional<UserDevice> findByRefreshToken(RefreshToken refreshToken);
 

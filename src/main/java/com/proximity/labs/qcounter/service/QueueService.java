@@ -2,6 +2,7 @@ package com.proximity.labs.qcounter.service;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import com.proximity.labs.qcounter.data.dto.request.NewQueueRequest;
@@ -42,5 +43,9 @@ public class QueueService {
 
     public Optional<Queue> findFirstByClientGeneratedId(String clientGeneratedId) {
         return queueRepository.findFirstByClientGeneratedId(clientGeneratedId);
+    }
+
+    public List<Queue> findByUserOwnerId(long userId) {
+        return queueRepository.findByOwnerId(userId);
     }
 }

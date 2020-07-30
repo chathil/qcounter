@@ -13,6 +13,8 @@
  */
 package com.proximity.labs.qcounter.exception;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -40,5 +42,14 @@ public class ResourceNotFoundException extends RuntimeException {
 
     public Object getFieldValue() {
         return fieldValue;
+    }
+
+    public String toJsonString() {
+        try {
+            return new ObjectMapper().writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }

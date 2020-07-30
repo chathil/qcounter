@@ -66,7 +66,7 @@ public class Queue extends DateAudit {
     @Column(nullable = false)
     private String location = "Indonesia";
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "queue_stats_id", unique = true, referencedColumnName = "id")
     private QueueStats queueStats;
 
@@ -74,7 +74,7 @@ public class Queue extends DateAudit {
     CascadeType.ALL)
     private List<InQueue> inQueues;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "owner_user_id", nullable = false)
     private User owner;
 
@@ -92,10 +92,16 @@ public class Queue extends DateAudit {
         this.owner = owner;
     }
 
-    
-
     public Long getId() {
         return id;
+    }
+
+    public List<InQueue> getInQueues() {
+        return inQueues;
+    }
+
+    public void setInQueues(List<InQueue> inQueues) {
+        this.inQueues = inQueues;
     }
 
     public String getName() {

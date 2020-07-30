@@ -1,6 +1,7 @@
 package com.proximity.labs.qcounter.data.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class QrCodeRequest {
 

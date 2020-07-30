@@ -37,8 +37,8 @@ public class UserDeviceService {
     /**
      * Find the user device info by user id
      */
-    public Optional<UserDevice> findByUserId(Long userId) {
-        return userDeviceRepository.findByUserId(userId);
+    public Optional<UserDevice> findById(Long userId) {
+        return userDeviceRepository.findById(userId);
     }
 
     /**

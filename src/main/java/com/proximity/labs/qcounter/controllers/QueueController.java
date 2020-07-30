@@ -1,41 +1,22 @@
 package com.proximity.labs.qcounter.controllers;
 
-import java.util.function.Function;
-
-import com.google.zxing.qrcode.encoder.QRCode;
 import com.proximity.labs.qcounter.annotation.CurrentUser;
-import com.proximity.labs.qcounter.data.dto.request.CounterRequest;
 import com.proximity.labs.qcounter.data.dto.request.JoinQueueRequest;
 import com.proximity.labs.qcounter.data.dto.request.NewQueueRequest;
 import com.proximity.labs.qcounter.data.dto.response.JoinQueueResponse;
 import com.proximity.labs.qcounter.data.dto.response.NewQueueResponse;
-import com.proximity.labs.qcounter.data.dto.response.UserCounterResponse;
 import com.proximity.labs.qcounter.data.models.queue.InQueue;
 import com.proximity.labs.qcounter.data.models.queue.Queue;
 import com.proximity.labs.qcounter.data.models.queue.QueueStats;
 import com.proximity.labs.qcounter.data.models.user.User;
 import com.proximity.labs.qcounter.exception.AppException;
-import com.proximity.labs.qcounter.exception.UserRegistrationException;
-import com.proximity.labs.qcounter.service.InQueueService;
-import com.proximity.labs.qcounter.service.QrCodeService;
-import com.proximity.labs.qcounter.service.QueueService;
-import com.proximity.labs.qcounter.service.QueueStatsService;
-import com.proximity.labs.qcounter.service.UserService;
-
+import com.proximity.labs.qcounter.service.*;
+import io.swagger.annotations.ApiOperation;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import io.swagger.annotations.ApiOperation;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/queue")
@@ -92,28 +73,6 @@ public class QueueController {
         logger.info(queueId);
         return ResponseEntity.ok(rootUrl);
     }
-
-    /**
-     * a websocket that returns realtime currentInQueue, currentQueue, and state.
-     * for guest.
-     * 
-     * @return
-     */
-    public ResponseEntity guestCounter(CounterRequest counterRequest) {
-        logger.info(counterRequest.getQueueId());
-        return ResponseEntity.ok(counterRequest.getQueueId());
-    }
-
-    /**
-     * a websocket that returns realtime queue counter for queue owner.
-     * 
-     * @return
-     */
-    public ResponseEntity ownerCounter() {
-        return ResponseEntity.ok("");
-    }
-
-    
 
     /**
      * Join a queue
