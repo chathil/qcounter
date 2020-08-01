@@ -10,9 +10,7 @@ import javax.sql.DataSource;
 
 @Configuration
 public class DatabaseConfig {
-
-    @Value("${spring.datasource.url}")
-    private String dbUrl;
+    private final String dbUrl = System.getenv("JDBC_DATABASE_URL");
 
     @Bean
     public DataSource dataSource() {
