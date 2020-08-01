@@ -113,8 +113,7 @@ public class AuthController {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		return authService
-				.createAndPersistRefreshTokenForDevice(authentication, authRequest.getDeviceToken(),
-						authRequest.getIpAddress(), authRequest.getEmail(), authRequest.getPassword())
+				.createAndPersistRefreshTokenForDevice(authentication, authRequest.getDeviceToken())
 				.map(RefreshToken::getToken).map(refreshToken -> {
 					String accessToken = authService.generateToken(customUserDetails);
 					return ResponseEntity.ok(new AuthResponse(customUserDetails.getId(), customUserDetails.hexId(),

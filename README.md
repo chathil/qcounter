@@ -152,7 +152,7 @@ contains classes to write bussiness logic, usually before making changes to db. 
          this.userService = userService;
          this.applicationEventPublisher = applicationEventPublisher;
      }
-   
+   }
    ```
 
    ​		

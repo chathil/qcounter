@@ -32,15 +32,15 @@ public class QueueService {
         Queue queue = createQueue(owner, nQueueRequest);
         queue.setQueueStats(qStats);
         qStats.setQueue(queue);
-        queue = queueRepository.save(queue);
+        queue = save(queue);
         return Optional.of(queue);
     }
 
     public Queue createQueue(User owner, NewQueueRequest nQueueRequest) {
         Date validUntil = Date.from(Instant.now().plusMillis(nQueueRequest.getValidFor()));
         return new Queue(owner, nQueueRequest.getClientGeneratedId(), nQueueRequest.getName(), nQueueRequest.getDesc(),
-        nQueueRequest.getMax(), nQueueRequest.getIncrementBy(), validUntil, nQueueRequest.getContact(),
-        nQueueRequest.isClosedQueue(), "Indonesia ");
+                nQueueRequest.getMax(), nQueueRequest.getIncrementBy(), validUntil, nQueueRequest.getContact(),
+                nQueueRequest.isClosedQueue(), "Indonesia");
     }
 
     public Optional<Queue> findFirstByClientGeneratedId(String clientGeneratedId) {
