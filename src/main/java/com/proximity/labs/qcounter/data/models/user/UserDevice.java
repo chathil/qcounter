@@ -1,16 +1,7 @@
 package com.proximity.labs.qcounter.data.models.user;
 
 import javax.annotation.Generated;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import com.proximity.labs.qcounter.data.models.token.RefreshToken;
 
@@ -21,7 +12,8 @@ public class UserDevice {
     public UserDevice() {}
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_device_seq")
+    @SequenceGenerator(name = "user_device_seq", allocationSize = 1, initialValue = 11)
     private Long id;
 
     @Column(nullable = false, unique = true)

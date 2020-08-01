@@ -3,18 +3,7 @@ package com.proximity.labs.qcounter.data.models.user;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.JoinColumn;
+import javax.persistence.*;
 
 import com.proximity.labs.qcounter.data.models.audit.DateAudit;
 import com.proximity.labs.qcounter.data.models.queue.InQueue;
@@ -59,7 +48,8 @@ public class User extends DateAudit implements UserDetails {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
+    @SequenceGenerator(name = "user_seq", allocationSize = 1, initialValue = 11)
     private Long id;
 
     private String name;
