@@ -1,5 +1,5 @@
 
-![build](https://github.com/chathil/qcounter/workflows/Java%20CI%20with%20Gradle/badge.svg?branch=master)
+![Build](https://github.com/chathil/qcounter/workflows/Build/badge.svg?branch=deploy)
 
 # Project Structure
 ```
@@ -152,7 +152,7 @@ contains classes to write bussiness logic, usually before making changes to db. 
          this.userService = userService;
          this.applicationEventPublisher = applicationEventPublisher;
      }
-   
+   }
    ```
 
    ​		
