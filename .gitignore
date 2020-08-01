@@ -34,3 +34,5 @@ out/
 .vscode/
 
 .bin/
+
+.src/resources/application.properties
