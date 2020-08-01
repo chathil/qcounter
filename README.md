@@ -1,4 +1,6 @@
 
+![Java CI with Gradle](https://github.com/chathil/qcounter/workflows/Java%20CI%20with%20Gradle/badge.svg?branch=master)
+
 # Project Structure
 ```
         qcounter
