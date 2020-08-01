@@ -1,4 +1,6 @@
 
+![build](https://github.com/chathil/qcounter/workflows/Java%20CI%20with%20Gradle/badge.svg?branch=master)
+
 # Project Structure
 ```
         qcounter
@@ -95,9 +97,9 @@ contains classes to write bussiness logic, usually before making changes to db. 
 
 ```java
         public interface UserRepository extends JpaRepository<User, Long> {
-            ...
+            //...
             Optional<User> findByEmail(String email);
-            ...
+            //...
         }
 ```
 
@@ -126,7 +128,7 @@ contains classes to write bussiness logic, usually before making changes to db. 
             public Optional<User> findByEmail(String email) {
                 return userRepository.findByEmail(email);
             }
-            ...
+            //...
         }
 ```
 
