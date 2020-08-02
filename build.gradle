@@ -40,8 +40,10 @@ dependencies {
 
 	testImplementation('junit:junit:4.13')
 	testImplementation('com.h2database:h2')
+	testImplementation('org.springframework.security:spring-security-test:5.3.3.RELEASE')
 }
 
 test {
 	useJUnitPlatform()
+	useJUnit()
 }

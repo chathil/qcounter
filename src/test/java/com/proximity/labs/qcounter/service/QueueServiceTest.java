@@ -5,7 +5,7 @@ import com.proximity.labs.qcounter.data.models.queue.QueueStats;
 import com.proximity.labs.qcounter.data.models.user.User;
 import com.proximity.labs.qcounter.data.repositories.QueueRepository;
 import com.proximity.labs.qcounter.utils.FakeDataDummy;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +17,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest()
 @ExtendWith(MockitoExtension.class)
 @Transactional
 public class QueueServiceTest {
+
     @MockBean
     private QueueRepository repository;
 
