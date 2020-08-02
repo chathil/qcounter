@@ -65,7 +65,7 @@ public class AuthControllerAdvice {
     public ApiResponse processValidationError(final MethodArgumentNotValidException ex, final WebRequest request) {
         final BindingResult result = ex.getBindingResult();
         final List<ObjectError> allErrors = result.getAllErrors();
-        final String data = processAllErrors(allErrors).stream().collect(Collectors.joining("\n"));
+        final String data = String.join("\n", processAllErrors(allErrors));
         return new ApiResponse(false, data, ex.getClass().getName(), resolvePathFromWebRequest(request));
     }
 

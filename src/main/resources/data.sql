@@ -34,7 +34,7 @@ INSERT INTO queue_stats(id, current_in_queue, current_queue, state) VALUES (4, 1
 INSERT INTO queues(id, created_at, updated_at, client_generated_id, contact, description, increment_by, is_closed_queue, location, max_capacity, name, valid_until, owner_user_id, queue_stats_id)
 VALUES (1, '2020-07-26 01:02:03', '2020-07-26 01:02:03', 'VlTudOiQ1K7l5kg6xLDyA38JLdPbl_2loOfUwA20cZykYgr4_6qAlxKaGdIuFZw8TKhuyIsE4D41PjOlwUo13g1', '085306440054', 'A quite long queue description to illustrate how good it will look in front end, but not too long', 1, false, 'Indonesia', 15, 'Lorem Queue Chathil', '2020-12-26 01:02:03', 1, 1);
 INSERT INTO queues(id, created_at, updated_at, client_generated_id, contact, description, increment_by, is_closed_queue, location, max_capacity, name, valid_until, owner_user_id, queue_stats_id)
-VALUES (2, '2020-07-26 01:02:03', '2020-07-26 01:02:03', 'VlTudOiQ1K7l5kg6xLDyA38JLdPbl_2loOfUwA20cZykYgr4_6qAlxKaGdIuFZw8TKhuyIsE4D41PjOlwUo13g2', '085306440055', 'A quite long queue description to illustrate how good it will look in front end, but not too long', 1, true, 'Indonesia', 10, 'Lorem Queue Chathil', '2020-12-26 01:02:03', 1, 2);
+VALUES (2, '2020-07-26 01:02:03', '2020-07-26 01:02:03', 'VlTudOiQ1K7l5kg6xLDyA38JLdPbl_2loOfUwA20cZykYgr4_6qAlxKaGdIuFZw8TKhuyIsE4D41PjOlwUo13g2', '085306440055', 'A quite long queue description to illustrate how good it will look in front end, but not too long', 1, true, 'Indonesia', 10, 'Lorem Queue Chathil 2', '2020-12-26 01:02:03', 1, 2);
 INSERT INTO queues(id, created_at, updated_at, client_generated_id, contact, description, increment_by, is_closed_queue, location, max_capacity, name, valid_until, owner_user_id, queue_stats_id)
 VALUES (3, '2020-07-26 01:02:03', '2020-07-26 01:02:03', 'VlTudOiQ1K7l5kg6xLDyA38JLdPbl_2loOfUwA20cZykYgr4_6qAlxKaGdIuFZw8TKhuyIsE4D41PjOlwUo13g3', '085306440056', 'A quite long queue description to illustrate how good it will look in front end, but not too long', 1, false, 'Indonesia', 12, 'Lorem Queue Yusuf', '2020-12-26 01:02:03', 2, 3);
 INSERT INTO queues(id, created_at, updated_at, client_generated_id, contact, description, increment_by, is_closed_queue, location, max_capacity, name, valid_until, owner_user_id, queue_stats_id)
@@ -52,13 +52,15 @@ VALUES (4, null, null, '085206440054', null, '2020-07-26 02:02:03', 'Shawn Sande
 INSERT INTO in_queues(id, blocked_at, called_at, contact, exited_at, joined_at, name, queue_num, queue_id, user_id)
 VALUES (5, null, null, '085206440054', null, '2020-07-26 02:02:03', 'Lakeesha from the Hood', 5, 3, 6);
 INSERT INTO in_queues(id, blocked_at, called_at, contact, exited_at, joined_at, name, queue_num, queue_id, user_id)
-VALUES (6, null, null, '085206440054', null, '2020-07-26 02:02:03', 'Jack Sterling', 6, 3, 7);
+VALUES (6, null, null, '085206440054', null, '2020-07-26 02:02:03', 'Lakeesha from the Hood', 1, 1, 6);
 INSERT INTO in_queues(id, blocked_at, called_at, contact, exited_at, joined_at, name, queue_num, queue_id, user_id)
-VALUES (7, null, null, '085206440054', null, '2020-07-26 02:02:03', 'Gabrielle', 7, 3, 8);
+VALUES (7, null, null, '085206440054', null, '2020-07-26 02:02:03', 'Jack Sterling', 6, 3, 7);
 INSERT INTO in_queues(id, blocked_at, called_at, contact, exited_at, joined_at, name, queue_num, queue_id, user_id)
-VALUES (8, null, null, '085206440054', null, '2020-07-26 02:02:03', 'Sheena', 8, 3, 9);
+VALUES (8, null, null, '085206440054', null, '2020-07-26 02:02:03', 'Gabrielle', 7, 3, 8);
 INSERT INTO in_queues(id, blocked_at, called_at, contact, exited_at, joined_at, name, queue_num, queue_id, user_id)
-VALUES (9, null, null, '085206440054', null, '2020-07-26 02:02:03', 'Chef Jerr', 9, 3, 10);
+VALUES (9, null, null, '085206440054', null, '2020-07-26 02:02:03', 'Sheena', 8, 3, 9);
+INSERT INTO in_queues(id, blocked_at, called_at, contact, exited_at, joined_at, name, queue_num, queue_id, user_id)
+VALUES (10, null, null, '085206440054', null, '2020-07-26 02:02:03', 'Chef Jerr', 9, 3, 10);
 
 --Add initial user_authority
 INSERT INTO user_authority(user_id, role_id) VALUES (1, 1);

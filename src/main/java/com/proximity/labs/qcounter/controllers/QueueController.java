@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/queue")
 public class QueueController {
@@ -50,7 +52,7 @@ public class QueueController {
     @ApiOperation(value = "Create a new queue and return the created queue without data from queue_stats table.")
     @PostMapping
     public ResponseEntity newQueue(@CurrentUser User currentUser, @RequestBody NewQueueRequest nQueueRequest) {
-        if(currentUser.getMyQueues().size() > 1)
+        if (currentUser.getMyQueues().size() > 1)
             throw new AppException("You have reached max queue you can create. which is two");
 
         return queueService.createQueueAndPersist(currentUser, nQueueRequest).map(newQ -> ResponseEntity.ok(new NewQueueResponse(newQ.getClientGeneratedId(), newQ.getName(),
@@ -62,10 +64,12 @@ public class QueueController {
 
     /**
      * Return all guest readable details about this queue without currentInQueue,
-     * currentQueue, and state. NOT SECURED. doc by @chathil
+     * currentQueue, and state. NOT SECURED.
+     * user will probably navigate here with qr-code
+     * currently returning github pages but later will json
      *
      * @param queueId
-     * @return
+     * @return all guest readable details about this queue without currentInQueue
      */
     @ApiOperation(value = "Return all guest readable detail about this queue, this route is meant for unauthorized guest. Not secured by default.")
     @GetMapping(value = "/guest/{queue_id}")
@@ -81,13 +85,12 @@ public class QueueController {
     public ResponseEntity joinQueue(@CurrentUser User currentUser, @RequestBody JoinQueueRequest joinQueueRequest) {
         if (currentUser.getQueues().size() > 1)
             throw new AppException("You have reached max queue you can join. which is two");
+        Queue qToJoin = queueService.findFirstByClientGeneratedId(joinQueueRequest.getQueueId())
+                .orElseThrow(() -> new AppException(String.format("Queue with id %s not exist", joinQueueRequest.getQueueId())));
+        if (inQueueService.findUserInQueue(qToJoin.getId(), currentUser.getId()).isPresent())
+            throw new AppException(String.format("You already joined queue with id %s", qToJoin.getClientGeneratedId()));
         return inQueueService.joinQueueAndPersist(currentUser, joinQueueRequest).map(pair -> {
             Queue q = pair.getFirst();
-
-            inQueueService.findUserInQueue(q.getId(), currentUser.getId()).ifPresent(inQueue -> {
-                throw new AppException(String.format("You already joined queue with id %s", q.getClientGeneratedId()));
-            });
-
             InQueue inQ = pair.getSecond();
             User qOwner = q.getOwner();
             QueueStats qStats = q.getQueueStats();

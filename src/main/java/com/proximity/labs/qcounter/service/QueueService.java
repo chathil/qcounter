@@ -14,6 +14,7 @@ import com.proximity.labs.qcounter.data.models.user.User;
 import com.proximity.labs.qcounter.data.repositories.QueueRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -32,8 +33,12 @@ public class QueueService {
         Queue queue = createQueue(owner, nQueueRequest);
         queue.setQueueStats(qStats);
         qStats.setQueue(queue);
-        queue = save(queue);
-        return Optional.of(queue);
+        try {
+            queue = save(queue);
+            return Optional.ofNullable(queue);
+        }catch (DataIntegrityViolationException e) {
+            return Optional.empty();
+        }
     }
 
     public Queue createQueue(User owner, NewQueueRequest nQueueRequest) {

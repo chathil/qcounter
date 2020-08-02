@@ -80,7 +80,6 @@ Content-Type: application/json
 
 ### Create Queue
 POST http://localhost:8080/queue
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTk2MTE2MzM5LCJleHAiOjE1OTYxNDg3Mzl9.9Y0CCMjH_NSWbaky08TEJ9CYLf0rfJxnP5ry91b2DDgOrn4gzTWrWk8nfi5Zm-JFQrk2AAEvEyIkG6QJ0COM-A
 Content-Type: application/json
 
 {
@@ -96,13 +95,13 @@ Content-Type: application/json
 }
 
 ### Join a queue/ Get in line
-POST https://qcounter.herokuapp.com:8080/queue/join
+POST http://localhost:8080/queue/join
 #Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzIiwiaWF0IjoxNTk2MTE4ODc3LCJleHAiOjE1OTYxNTEyNzd9.ybRei0d8G7AznGODdlvd37dRo7aiNpRok16CRPkF_RF860y5asLL1rbgpWxXoB2Sd_IO-e_BzRg-awBSjTPNLg
-Authorization: Bearer  eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTk2MTE2MzM5LCJleHAiOjE1OTYxNDg3Mzl9.9Y0CCMjH_NSWbaky08TEJ9CYLf0rfJxnP5ry91b2DDgOrn4gzTWrWk8nfi5Zm-JFQrk2AAEvEyIkG6QJ0COM-A
+Authorization: Bearer  eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNTk2MzQ0MDY5LCJleHAiOjE1OTYzNzY0Njl9.arJOn8vlD1p0bT51vXbqV4ovT-l_oNUfe2kd3FIWvwIYFG43FHU8cXqTJh8kWl84_11sJ1yUHPbg-Yc8HGotMQ
 Content-Type: application/json
 
 {
-  "queue_id": "VlTudOiQ1K7l5kg6xLDyA38JLdPbl_2loOfUwA20cZykYgr4_6qAlxKaGdIuFZw8TKhuyIsE4D41PjOlwUo13g3",
+  "queue_id": "VlTudOiQ1K7l5kg6xLDyA38JLdPbl_2loOfUwA20cZykYgr4_6qAlxKaGdIuFZw8TKhuyIsE4D41PjOlwUo13g2",
   "ip_address": "192.1782.2222",
   "full_name": "Ihza Ahmad III",
   "contact": "0853005488"

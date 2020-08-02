@@ -38,15 +38,15 @@ public class QueueServiceTest {
     @Test
     public void createQueueTest() {
         User savedUser = userService.findByEmail("chathil98@gmail.com").get();
-        Queue queue = service.createQueue(savedUser, FakeDataDummy.queueRequest());
+        Queue queue = service.createQueue(savedUser, FakeDataDummy.queueRequest().get(0));
         assertThat(queue).isNotNull();
-        assertThat(queue.getName()).isEqualTo(FakeDataDummy.queueRequest().getName());
+        assertThat(queue.getName()).isEqualTo(FakeDataDummy.queueRequest().get(0).getName());
     }
 
     @Test
     public void createQueueAndPersistTest() {
         User savedUser = userService.findByEmail("chathil98@gmail.com").get();
-        Queue queue = service.createQueue(savedUser, FakeDataDummy.queueRequest());
+        Queue queue = service.createQueue(savedUser, FakeDataDummy.queueRequest().get(0));
         given(statsService.createQueueStats()).willCallRealMethod();
         given(repository.save(queue)).willAnswer(invocation -> invocation.getArgument(0));
         QueueStats qStats = statsService.createQueueStats();
@@ -54,7 +54,7 @@ public class QueueServiceTest {
         qStats.setQueue(queue);
         Queue savedQueue = service.save(queue);
         assertThat(savedQueue).isNotNull();
-        assertThat(savedQueue.getName()).isEqualTo(FakeDataDummy.queueRequest().getName());
+        assertThat(savedQueue.getName()).isEqualTo(FakeDataDummy.queueRequest().get(0).getName());
         verify(repository).save(any(Queue.class));
     }
 }
