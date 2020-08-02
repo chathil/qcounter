@@ -1,16 +1,16 @@
 ### Login Yusup
-GET https://qcounter.herokuapp.com/auth/signin
+GET http://localhost:8080/auth/signin
 Content-Type: application/json
 
 {
-  "device_token": "intexxlw",
+  "device_token": "intexxslw",
   "ip_address": "1231123",
   "email": "yusuf@gmail.com",
   "password": "password"
 }
 
 ### Refresh Token Yusup
-GET https://qcounter.herokuapp.com/auth/refresh
+GET http://localhost:8080/auth/refresh
 Content-Type: application/json
 
 {
@@ -44,7 +44,7 @@ Content-Type: application/json
   "device_token": "this is a uswer devive toksen sss23345ss",
   "ip_address": "192.200.020.210",
   "name": "Ihza SS",
-  "email": "ihza@gmail.com",
+  "email": "imhza@gmail.com",
   "password": "password"
 }
 
@@ -106,4 +106,13 @@ Content-Type: application/json
   "ip_address": "192.1782.2222",
   "full_name": "Ihza Ahmad III",
   "contact": "0853005488"
+}
+
+### Logout
+GET http://localhost:8080/user/signout
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNTk2Mzg0MjYwLCJleHAiOjE1OTY0MTY2NjB9.ChFkgCoAIbzaXH8D_ADZjSKfPr5Xf0WH4NLI8ZRsJ4Qh32I5i7d7LOdx-e6Big0WXQgtje3QiFP9YvqQqZJ_yw
+Content-Type: application/json
+
+{
+  "device_token": "intexxslw"
 }

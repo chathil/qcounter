@@ -75,6 +75,7 @@ public class UserService implements UserDetailsService{
     public User save(User user) {
         Boolean isNewUserAsAdmin = false;
         user.addRoles(getRolesForNewUser(isNewUserAsAdmin));
+
         return userRepository.save(user);
     }
 

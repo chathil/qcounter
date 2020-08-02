@@ -35,7 +35,7 @@ public class RefreshToken extends DateAudit {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "refresh_token_seq")
-    @SequenceGenerator(name = "refresh_token_seq", allocationSize = 1)
+    @SequenceGenerator(name = "refresh_token_seq", allocationSize = 1, initialValue = 20)
     private Long id;
 
     @Column(name = "token", nullable = false, unique = true)

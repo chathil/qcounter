@@ -77,8 +77,8 @@ public class AuthService {
         return userService.existsByEmail(email);
     }
 
-    public Optional<Authentication> authenticateUser(String deviceToken, String ipAddress, String email,
-            String password) {
+    public Optional<Authentication> authenticateUser(String email,
+                                                     String password) {
         return Optional.ofNullable(
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password)));
     }

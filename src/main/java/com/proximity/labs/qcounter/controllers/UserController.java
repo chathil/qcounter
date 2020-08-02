@@ -11,7 +11,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 
 
-
+import com.proximity.labs.qcounter.data.dto.request.SignoutRequest;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
@@ -29,10 +29,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -43,41 +41,46 @@ import javax.activation.MimetypesFileTypeMap;
 
 @Api(value = "User Rest API", description = "Defines endpoints for the logged in user.this enpoints served functions related to user management. It's secured by default")
 @RestController("/user")
+@RequestMapping("/user")
 public class UserController {
 
-  private static final Logger logger = Logger.getLogger(UserController.class);
+    private static final Logger logger = Logger.getLogger(UserController.class);
 
-  private final AuthService authService;
+    private final AuthService authService;
 
-  private final UserService userService;
+    private final UserService userService;
 
-  private final ApplicationEventPublisher applicationEventPublisher;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
-  @Autowired
-  public UserController(final AuthService authService, final UserService userService,
-      final ApplicationEventPublisher applicationEventPublisher) {
-    this.authService = authService;
-    this.userService = userService;
-    this.applicationEventPublisher = applicationEventPublisher;
-  }
+    @Autowired
+    public UserController(final AuthService authService, final UserService userService,
+                          final ApplicationEventPublisher applicationEventPublisher) {
+        this.authService = authService;
+        this.userService = userService;
+        this.applicationEventPublisher = applicationEventPublisher;
+    }
 
-  /**
-   * Log the user out from the app/device. Release the refresh token associated
-   * with the user device. doc by @chathil
-   * 
-   * @param customUserDetails
-   * @param deviceToken
-   * @return ResponseEntity
-   */
-  @GetMapping("/signout")
-  @ApiOperation(value = "Logs the specified user device and clears the refresh tokens associated with it")
-  public ResponseEntity logout(@CurrentUser User customUserDetails, @RequestParam("device_token") String deviceToken) {
-    userService.logout(deviceToken);
-    Object credentials = SecurityContextHolder.getContext().getAuthentication().getCredentials();
-    OnUserLogoutSuccessEvent logoutSuccessEvent = new OnUserLogoutSuccessEvent(customUserDetails.getEmail(),
-        credentials.toString());
-    applicationEventPublisher.publishEvent(logoutSuccessEvent);
-    return ResponseEntity.ok(new ApiResponse(true, "Log out successful"));
-  }
-
+    /**
+     * Log the user out from the app/device. Release the refresh token associated
+     * with the user device. doc by @chathil
+     *
+     * @param customUserDetails
+     * @param signoutRequest
+     * @return ResponseEntity
+     */
+    @GetMapping("/signout")
+    @ApiOperation(value = "Logs the specified user device and clears the refresh tokens associated with it")
+    public ResponseEntity signout(@CurrentUser User customUserDetails, @RequestBody SignoutRequest signoutRequest) {
+        userService.logout(signoutRequest.getDeviceToken());
+        logger.info(customUserDetails.getEmail());
+        Object credentials = SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getCredentials();
+        logger.info(credentials.toString());
+        OnUserLogoutSuccessEvent logoutSuccessEvent = new OnUserLogoutSuccessEvent(customUserDetails.getEmail(),
+                credentials.toString());
+        applicationEventPublisher.publishEvent(logoutSuccessEvent);
+        return ResponseEntity.ok(new ApiResponse(true, "Log out successful"));
+    }
 }

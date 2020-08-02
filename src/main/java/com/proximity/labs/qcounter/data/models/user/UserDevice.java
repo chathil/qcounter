@@ -13,7 +13,7 @@ public class UserDevice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_device_seq")
-    @SequenceGenerator(name = "user_device_seq", allocationSize = 1, initialValue = 11)
+    @SequenceGenerator(name = "user_device_seq", allocationSize = 1, initialValue = 20)
     private Long id;
 
     @Column(nullable = false, unique = true)
