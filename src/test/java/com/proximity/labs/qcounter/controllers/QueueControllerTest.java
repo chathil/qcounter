@@ -5,17 +5,13 @@ import com.proximity.labs.qcounter.advice.AuthControllerAdvice;
 import com.proximity.labs.qcounter.data.models.user.User;
 import com.proximity.labs.qcounter.data.repositories.UserRepository;
 import com.proximity.labs.qcounter.utils.FakeDataDummy;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureJdbc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener;
 import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.web.servlet.MockMvc;
@@ -29,7 +25,6 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
 @TestExecutionListeners({
         DependencyInjectionTestExecutionListener.class,

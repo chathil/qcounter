@@ -2,7 +2,7 @@ package com.proximity.labs.qcounter.service;
 
 import com.proximity.labs.qcounter.data.models.user.User;
 import com.proximity.labs.qcounter.data.repositories.UserRepository;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
