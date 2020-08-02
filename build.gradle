@@ -28,7 +28,7 @@ dependencies {
 	implementation 'com.google.zxing:core:3.4.0'
 	implementation 'com.google.zxing:javase:3.4.0'
 	implementation 'javax.activation:javax.activation-api:1.2.0'
-
+	implementation 'org.postgresql:postgresql:42.2.14'
 
 	runtimeOnly 'mysql:mysql-connector-java'
 
