@@ -14,6 +14,7 @@ import com.proximity.labs.qcounter.data.models.user.User;
 import com.proximity.labs.qcounter.data.repositories.QueueRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -32,15 +33,19 @@ public class QueueService {
         Queue queue = createQueue(owner, nQueueRequest);
         queue.setQueueStats(qStats);
         qStats.setQueue(queue);
-        queue = queueRepository.save(queue);
-        return Optional.of(queue);
+        try {
+            queue = save(queue);
+            return Optional.ofNullable(queue);
+        }catch (DataIntegrityViolationException e) {
+            return Optional.empty();
+        }
     }
 
     public Queue createQueue(User owner, NewQueueRequest nQueueRequest) {
         Date validUntil = Date.from(Instant.now().plusMillis(nQueueRequest.getValidFor()));
         return new Queue(owner, nQueueRequest.getClientGeneratedId(), nQueueRequest.getName(), nQueueRequest.getDesc(),
-        nQueueRequest.getMax(), nQueueRequest.getIncrementBy(), validUntil, nQueueRequest.getContact(),
-        nQueueRequest.isClosedQueue(), "Indonesia ");
+                nQueueRequest.getMax(), nQueueRequest.getIncrementBy(), validUntil, nQueueRequest.getContact(),
+                nQueueRequest.isClosedQueue(), "Indonesia");
     }
 
     public Optional<Queue> findFirstByClientGeneratedId(String clientGeneratedId) {

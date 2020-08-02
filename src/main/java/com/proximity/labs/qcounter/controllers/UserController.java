@@ -61,64 +61,6 @@ public class UserController {
     this.applicationEventPublisher = applicationEventPublisher;
   }
 
-  @GetMapping("/test")
-  public String test(@RequestParam final String name) {
-    return "";
-  }
-
-  public static String hashData(final String data) throws NoSuchAlgorithmException, IOException {
-    final MessageDigest md = MessageDigest.getInstance("MD5");
-    md.update(data.getBytes());
-    final byte[] b = md.digest();
-    final StringBuffer sb = new StringBuffer();
-    for (final byte b1 : b) {
-      sb.append(Integer.toHexString(b1 & 0xff).toString());
-    }
-    return sb.toString();
-  }
-
-  /**
-   * This methods retrieve .png/ /.jpg from client with max size of 500kb and
-   * perform file operations to save it with file name user_id + name doc
-   * by @chathil
-   * 
-   * @param customUserDetails
-   * @return String
-   */
-  @ApiOperation(value = "When the user signup theres no options to set profile picture. so this is the route to set it later.")
-  @PatchMapping("/ava")
-  public String ava(@CurrentUser final User customUserDetails, @NonNull @RequestParam("file") final MultipartFile file)
-      throws IllegalStateException, IOException, NoSuchAlgorithmException, URISyntaxException {
-
-    final Path baseDir = Paths.get("src/main/resources/profile/");
-    final String extension = FilenameUtils.getExtension(file.getOriginalFilename());
-    final long size = file.getSize() / 1024;
-    final long maxSize = 500;
-
-    final File f = new File(file.getOriginalFilename());
-    final String mimetype = new MimetypesFileTypeMap().getContentType(f);
-    final String type = mimetype.split("/")[0];
-    if (type.equals("image")) {
-      if (size <= maxSize) {
-        final File directory = new File(baseDir.toAbsolutePath().toString());
-        final File[] files = directory.listFiles();
-        for (final File fl : files) {
-          if (fl.getName().contains(hashData(customUserDetails.getId() + customUserDetails.getName()))) {
-            fl.delete();
-            break;
-          }
-        }
-        file.transferTo(new File(baseDir.toAbsolutePath().toString() + "/"
-            + hashData(customUserDetails.getId() + customUserDetails.getName()) + "." + extension));
-      } else {
-        System.out.println("Image size cannot exceed 500kb");
-      }
-    } else {
-      System.out.println("It's NOT an image");
-    }
-    return null;
-  }
-
   /**
    * Log the user out from the app/device. Release the refresh token associated
    * with the user device. doc by @chathil

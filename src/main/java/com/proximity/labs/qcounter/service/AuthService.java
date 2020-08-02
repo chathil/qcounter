@@ -97,7 +97,7 @@ public class AuthService {
      * Remove the existing refresh token as the old one should not remain valid.
      */
     public Optional<RefreshToken> createAndPersistRefreshTokenForDevice(Authentication authentication,
-            String deviceToken, String ipAddress, String email, String password) {
+            String deviceToken) {
 
         User currentUser = (User) authentication.getPrincipal();
 
