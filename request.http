@@ -60,7 +60,7 @@ Content-Type: application/json
 }
 
 ### Refresh token Ihza
-GET https://qcounter.herokuapp.com/auth/refresh
+GET http://localhost:8080/auth/refresh
 Content-Type: application/json
 
 {
@@ -68,11 +68,11 @@ Content-Type: application/json
 }
 
 ### Login Lakeesha from the hood
-GET https://qcounter.herokuapp.com/auth/signin
+GET http://localhost:8080/auth/signin
 Content-Type: application/json
 
 {
-  "device_token": "this is a uswer devive toksen sss23345sss",
+  "device_token": "this is a uswers devive toksen sss23345sss",
   "ip_address": "192.200.020.210",
   "email": "lakeesha@gmail.com",
   "password": "password"
@@ -115,4 +115,13 @@ Content-Type: application/json
 
 {
   "device_token": "intexxslw"
+}
+
+### inqueues
+GET http://localhost:8080/in_queue
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNTk2NTIzNjg2LCJleHAiOjE1OTY1NTYwODZ9.SNZ2veeITP3Su9WbQ5JbzdDQrGExkBfqLDZWjnsPVRAztSGgnBI095iaNHELtArOCAD2A9JWlyAtBZWIr3kwaA
+Content-Type: application/json
+
+{
+  "queue_id": "VlTudOiQ1K7l5kg6xLDyA38JLdPbl_2loOfUwA20cZykYgr4_6qAlxKaGdIuFZw8TKhuyIsE4D41PjOlwUo13g3"
 }

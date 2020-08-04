@@ -115,4 +115,7 @@ public class InQueue {
         this.name = name;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

@@ -6,6 +6,7 @@ import com.proximity.labs.qcounter.data.dto.request.SignupRequest;
 import com.proximity.labs.qcounter.data.models.queue.InQueue;
 import com.proximity.labs.qcounter.data.models.queue.Queue;
 import com.proximity.labs.qcounter.data.models.role.Role;
+import com.proximity.labs.qcounter.data.models.role.RoleName;
 import com.proximity.labs.qcounter.data.models.token.RefreshToken;
 import com.proximity.labs.qcounter.data.models.user.User;
 import com.proximity.labs.qcounter.data.models.user.UserDevice;
@@ -109,9 +110,16 @@ public class FakeDataDummy {
         return new Queue(owner, "clientGeneratedId", "testQueue", "testQueueVeryShortButConsideredLongDescription", 100, 2, Date.from(Instant.now().plusMillis(320000L)), "085306550054", false, "Indonesia");
     }
 
+    public static Queue savedQueue() {
+        Queue savedQueue = new Queue(user().get(0), "clientGeneratedId", "testQueue", "testQueueVeryShortButConsideredLongDescription", 100, 2, Date.from(Instant.now().plusMillis(320000L)), "085306550054", false, "Indonesia");
+        savedQueue.setId(1L);
+        return savedQueue;
+    }
+
     public static List<User> user() {
         User user = new User("Abdul Chathil", "chathil98@gmail.com", "password", "192.168.1.1");
         user.setId(1L);
+        user.addRole(new Role(RoleName.ROLE_USER));
         User user1 = new User("Yusuf Raditya", "yusuf@gmail.com", "password", "192.168.1.2");
         user1.setId(2L);
         User user2 = new User("Ihza Ahmad", "ihza@gmail.com", "password", "192.168.1.3");
@@ -166,9 +174,13 @@ public class FakeDataDummy {
 
     public static Set<InQueue> inQueues() {
         InQueue inQueue = new InQueue(queue(user().get(0)), user().get(1), user().get(1).getName(), user().get(1).getEmail(), 1);
+        inQueue.setId(1L);
         InQueue inQueue1 = new InQueue(queue(user().get(0)), user().get(2), user().get(2).getName(), user().get(2).getEmail(), 2);
+        inQueue1.setId(2L);
         InQueue inQueue2 = new InQueue(queue(user().get(0)), user().get(3), user().get(3).getName(), user().get(3).getEmail(), 3);
+        inQueue2.setId(3L);
         InQueue inQueue3 = new InQueue(queue(user().get(0)), user().get(4), user().get(4).getName(), user().get(4).getEmail(), 4);
+        inQueue3.setId(4L);
         return Set.of(inQueue, inQueue1, inQueue2, inQueue3);
     }
 }
