@@ -13,10 +13,9 @@ import java.awt.image.BufferedImage;
 public class QrCodeService {
     
     public BufferedImage generateQRCodeImage(String barcodeText) throws Exception {
-        QRCodeWriter barcodeWriter = new QRCodeWriter();
+        QRCodeWriter qrCodeWriter = new QRCodeWriter();
         BitMatrix bitMatrix = 
-          barcodeWriter.encode(barcodeText, BarcodeFormat.QR_CODE, 200, 200);
-     
+          qrCodeWriter.encode(barcodeText, BarcodeFormat.QR_CODE, 200, 200);
         return MatrixToImageWriter.toBufferedImage(bitMatrix);
     }
 }

@@ -13,6 +13,7 @@
  */
 package com.proximity.labs.qcounter.service;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -49,13 +50,6 @@ public class UserService implements UserDetailsService{
     }
 
     /**
-     * Finds a user in the database by username
-     */
-    public Optional<User> findByName(String name) {
-        return userRepository.findByName(name);
-    }
-
-    /**
      * Finds a user in the database by email
      */
     public Optional<User> findByEmail(String email) {
@@ -72,10 +66,8 @@ public class UserService implements UserDetailsService{
     /**
      * Save the user to the database
      */
-    public User save(User user) {
-        Boolean isNewUserAsAdmin = false;
+    public User save(User user, Boolean isNewUserAsAdmin) {
         user.addRoles(getRolesForNewUser(isNewUserAsAdmin));
-
         return userRepository.save(user);
     }
 
@@ -91,7 +83,6 @@ public class UserService implements UserDetailsService{
      * id is found matching the database for the given user, throw a log out exception.
      */
     public void logout(String deviceToken) {
-
         UserDevice userDevice = userDeviceService.findFirstByDeviceToken(deviceToken)
                 .orElseThrow(() -> new UserLogoutException(deviceToken, "Invalid device token supplied. No matching device found for the given user "));
 

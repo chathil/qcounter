@@ -85,6 +85,10 @@ public class Queue extends DateAudit {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Set<InQueue> getInQueues() {
         return inQueues;
     }

@@ -30,10 +30,17 @@ public class QrCodeController {
         this.rootUrl = rootUrl;
     }
 
+    /**
+     * Work in progress. currently returning github pages url
+     * will return qr code that contains url to join a queue
+     *
+     * @param qrCodeRequest
+     * @return
+     * @throws Exception
+     */
     @GetMapping(produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<BufferedImage> qrCode(@RequestBody QrCodeRequest qrCodeRequest)
     throws Exception {
-        logger.info(qrCodeRequest.getQueueId());
         return ResponseEntity.ok(qrCodeService.generateQRCodeImage(rootUrl));
     }
 

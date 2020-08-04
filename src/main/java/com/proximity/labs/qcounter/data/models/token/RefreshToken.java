@@ -106,4 +106,15 @@ public class RefreshToken extends DateAudit {
     public void setRefreshCount(Long refreshCount) {
         this.refreshCount = refreshCount;
     }
+
+    @Override
+    public String toString() {
+        return "RefreshToken{" +
+                "id=" + id +
+                ", token='" + token + '\'' +
+                ", userDevice=" + userDevice +
+                ", refreshCount=" + refreshCount +
+                ", expiryDate=" + expiryDate +
+                '}';
+    }
 }

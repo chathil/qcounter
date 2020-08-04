@@ -46,16 +46,18 @@ public class InQueueService {
 
     public void increment(Queue queue) {
         QueueStats qStats = queue.getQueueStats();
-        int currentQueue = qStats.getCurrentQueue() + queue.getIncrementBy();
-        qStats.setCurrentQueue(currentQueue);
+        if(qStats.getCurrentQueue() < queue.getMaxCapacity()) {
+            int currentQueue = qStats.getCurrentQueue() + queue.getIncrementBy();
+            qStats.setCurrentQueue(currentQueue > queue.getQueueStats().getCurrentInQueue() ? queue.getQueueStats().getCurrentInQueue() : currentQueue);
+        }
         qStatsService.save(qStats);
     }
 
     public void decrement(Queue queue) {
         QueueStats qStats = queue.getQueueStats();
-        if(qStats.getCurrentQueue() > 0) {
+        if (qStats.getCurrentQueue() > 0) {
             int upperBound = qStats.getCurrentQueue() - queue.getIncrementBy();
-            qStats.setCurrentQueue(upperBound);
+            qStats.setCurrentQueue(Math.max(upperBound, 0));
             qStatsService.save(qStats);
         }
     }
@@ -63,7 +65,7 @@ public class InQueueService {
     public List<Pair<Long, String>> getNext(Queue queue) {
         QueueStats qStats = queue.getQueueStats();
         int currentQueue = qStats.getCurrentQueue() + queue.getIncrementBy();
-        List<InQueue> inQs = inQueueRepository.findByQueueIdAndQueueNumGreaterThanAndQueueNumIsLessThanEqualOrderByQueueNum(queue.getId(), qStats.getCurrentQueue(), currentQueue);
+        Set<InQueue> inQs = inQueueRepository.findByQueueIdAndQueueNumGreaterThanAndQueueNumIsLessThanEqualOrderByQueueNum(queue.getId(), qStats.getCurrentQueue(), currentQueue);
         return inQs.stream().map(inQ -> Pair.of(inQ.getUser().getId(), inQ.getUser().getName())).collect(Collectors.toList());
     }
 
@@ -71,15 +73,14 @@ public class InQueueService {
         QueueStats qStats = queue.getQueueStats();
         int upperBound = qStats.getCurrentQueue() - queue.getIncrementBy();
         int lowerBound = qStats.getCurrentQueue() - queue.getIncrementBy() * 2;
-        List<InQueue> inQs = inQueueRepository.findByQueueIdAndQueueNumGreaterThanAndQueueNumIsLessThanEqualOrderByQueueNum(queue.getId(), lowerBound, upperBound);
+        Set<InQueue> inQs = inQueueRepository.findByQueueIdAndQueueNumGreaterThanAndQueueNumIsLessThanEqualOrderByQueueNum(queue.getId(), lowerBound, upperBound);
         return inQs.stream().map(inQ -> Pair.of(inQ.getUser().getId(), inQ.getUser().getName())).collect(Collectors.toList());
     }
 
     public List<Pair<Long, String>> getCurrent(Queue queue) {
         QueueStats qStats = queue.getQueueStats();
         int lowerBound = qStats.getCurrentQueue() - queue.getIncrementBy();
-        List<InQueue> inQs = inQueueRepository.findByQueueIdAndQueueNumGreaterThanAndQueueNumIsLessThanEqualOrderByQueueNum(queue.getId(), lowerBound, qStats.getCurrentQueue());
-        logger.info("currently serving " + inQs.size() + " person");
+        Set<InQueue> inQs = inQueueRepository.findByQueueIdAndQueueNumGreaterThanAndQueueNumIsLessThanEqualOrderByQueueNum(queue.getId(), lowerBound, qStats.getCurrentQueue());
         return inQs.stream().map(inQ -> Pair.of(inQ.getUser().getId(), inQ.getUser().getName())).collect(Collectors.toList());
     }
 
@@ -94,7 +95,6 @@ public class InQueueService {
     public Set<InQueue> findByQueueId(long queueId) {
         return inQueueRepository.findByQueueId(queueId);
     }
-
 
 
 }

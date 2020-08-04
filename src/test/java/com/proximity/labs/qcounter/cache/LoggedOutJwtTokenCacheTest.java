@@ -2,11 +2,9 @@ package com.proximity.labs.qcounter.cache;
 
 import com.proximity.labs.qcounter.event.OnUserLogoutSuccessEvent;
 import com.proximity.labs.qcounter.security.JwtTokenProvider;
-import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Instant;
@@ -15,7 +13,6 @@ import java.util.Date;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class LoggedOutJwtTokenCacheTest {

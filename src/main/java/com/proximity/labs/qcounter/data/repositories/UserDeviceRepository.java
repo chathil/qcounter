@@ -13,7 +13,4 @@ public interface UserDeviceRepository extends JpaRepository<UserDevice, Long> {
     Optional<UserDevice> findByRefreshToken(RefreshToken refreshToken);
 
     Optional<UserDevice> findFirstByDeviceToken(String deviceToken);
-
-    Optional<UserDevice> findByUserId(Long userId);
-
 }

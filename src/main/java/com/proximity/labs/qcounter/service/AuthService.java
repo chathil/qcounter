@@ -69,7 +69,7 @@ public class AuthService {
             throw new ResourceAlreadyInUseException("Email", "Address", newRegistrationRequestEmail);
         }
         logger.info("Trying to register new user [" + newRegistrationRequestEmail + "]");
-        User newUser = userService.save(new User(signupRequest.getName(), signupRequest.getEmail(), passwordEncoder.encode(signupRequest.getPassword()), signupRequest.getIpAddress()));
+        User newUser = userService.save(new User(signupRequest.getName(), signupRequest.getEmail(), passwordEncoder.encode(signupRequest.getPassword()), signupRequest.getIpAddress()), false);
         return Optional.ofNullable(newUser);
     }
 

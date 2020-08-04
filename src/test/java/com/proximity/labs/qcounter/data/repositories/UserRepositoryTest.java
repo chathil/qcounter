@@ -37,6 +37,24 @@ public class UserRepositoryTest {
 
         assertThat(found.isPresent()).isEqualTo(true);
         assertThat(user.getName()).isEqualTo(found.get().getName());
+    }
 
+    @Test
+    public void whenExistsByEmail_thenReturnTrue() {
+        boolean existByEmail = userRepository.existsByEmail("chathil98@gmail.com");
+        assertThat(existByEmail).isTrue();
+    }
+
+    @Test
+    public void whenExistsByEmail_thenReturnFalse() {
+        boolean existByEmail = userRepository.existsByEmail("chathil00@gmail.com");
+        assertThat(existByEmail).isFalse();
+    }
+
+    @Test
+    public void whenFindByEmail_thenReturnUser() {
+        Optional<User> user = userRepository.findByEmail("chathil98@gmail.com");
+        assertThat(user.isPresent()).isTrue();
+        assertThat(user.get().getName()).isEqualTo("Abdul Chathil");
     }
 }

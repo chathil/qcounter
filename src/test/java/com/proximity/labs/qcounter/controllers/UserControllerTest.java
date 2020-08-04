@@ -6,7 +6,10 @@ import com.proximity.labs.qcounter.advice.AuthControllerAdvice;
 import com.proximity.labs.qcounter.data.dto.request.SignoutRequest;
 import com.proximity.labs.qcounter.data.models.user.User;
 import com.proximity.labs.qcounter.data.repositories.UserRepository;
+import com.proximity.labs.qcounter.security.JwtTokenProvider;
+import org.junit.Rule;
 import org.junit.jupiter.api.Test;
+import org.junit.rules.ExpectedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.MethodParameter;
@@ -45,6 +48,11 @@ public class UserControllerTest {
     @Autowired
     AuthControllerAdvice authControllerAdvice;
 
+    @Autowired
+    private JwtTokenProvider tokenProvider;
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     private HandlerMethodArgumentResolver putAuthenticationPrincipal(String email) {
         return new HandlerMethodArgumentResolver() {
@@ -68,12 +76,15 @@ public class UserControllerTest {
                 .setCustomArgumentResolvers(putAuthenticationPrincipal("mark@gmail.com"))
                 .setControllerAdvice(authControllerAdvice)
                 .build();
+
         SignoutRequest signoutRequest = new SignoutRequest("eyJzdWIiOiIxNSIsImlhdCI6MTU5NTc3NDEzMSwiZXhwIjoxNTk1ODA2NTMxfQ6");
         Authentication authentication = mock(Authentication.class);
         SecurityContext securityContext = mock(SecurityContext.class);
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
-        when(SecurityContextHolder.getContext().getAuthentication().getCredentials()).thenReturn("eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNTk2Mzg0MjYwLCJleHAiOjE1OTY0MTY2NjB9.ChFkgCoAIbzaXH8D_ADZjSKfPr5Xf0WH4NLI8ZRsJ4Qh32I5i7d7LOdx-e6Big0WXQgtje3QiFP9YvqQqZJ_yw");
+
+
+        when(SecurityContextHolder.getContext().getAuthentication().getCredentials()).thenReturn(tokenProvider.generateTokenFromUserId(4L));
         mockMvc.perform(get("/user/signout").content(new ObjectMapper().writeValueAsString(signoutRequest)).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.data").value("Log out successful"));

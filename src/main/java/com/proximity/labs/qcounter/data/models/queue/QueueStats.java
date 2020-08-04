@@ -28,6 +28,10 @@ public class QueueStats {
         this.queue = queue;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public QueueStats() {}
 
     public Long getId() {

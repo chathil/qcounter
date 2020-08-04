@@ -131,7 +131,7 @@ public class AuthControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isExpectationFailed())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.data").value(String.format("Couldn't refresh token for [e765a4f-cdab-4db0-bf7e-e8faea9f74421]: [Unexpected error during token refresh. Please logout and login again.])", refreshRequest.getRefreshToken())));
+                .andExpect(jsonPath("$.data").value(String.format("Couldn't refresh token for [%s]: [Unexpected error during token refresh. Please logout and login again.])", refreshRequest.getRefreshToken())));
     }
 
 

@@ -174,6 +174,10 @@ public class User extends DateAudit implements UserDetails {
         role.getUserList().remove(this);
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getRole().name()))
@@ -187,7 +191,7 @@ public class User extends DateAudit implements UserDetails {
 
     @Override
     public String getUsername() {
-        return getName();
+        return getEmail();
     }
 
     @Override
