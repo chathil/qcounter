@@ -54,10 +54,10 @@ public class User extends DateAudit implements UserDetails {
 
     private String name;
 
-    @Column(unique = true, nullable = true)
+    @Column(unique = true)
     private String email;
 
-    @Column(nullable = true)
+    @Column()
     private String password;
 
     private String location = "Indonesia";

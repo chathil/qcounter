@@ -5,6 +5,7 @@ import com.proximity.labs.qcounter.advice.AuthControllerAdvice;
 import com.proximity.labs.qcounter.data.models.user.User;
 import com.proximity.labs.qcounter.data.repositories.UserRepository;
 import com.proximity.labs.qcounter.utils.FakeDataDummy;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -44,13 +45,13 @@ public class QueueControllerTest {
     private HandlerMethodArgumentResolver putAuthenticationPrincipal(String email) {
         return new HandlerMethodArgumentResolver() {
             @Override
-            public boolean supportsParameter(MethodParameter parameter) {
+            public boolean supportsParameter(@NotNull MethodParameter parameter) {
                 return parameter.getParameterType().isAssignableFrom(User.class);
             }
 
             @Override
-            public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-                                          NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+            public Object resolveArgument(@NotNull MethodParameter parameter, ModelAndViewContainer mavContainer,
+                                          @NotNull NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
                 return userRepository.findByEmail(email).get();
             }
         };

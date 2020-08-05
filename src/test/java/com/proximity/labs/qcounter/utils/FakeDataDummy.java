@@ -78,31 +78,38 @@ public class FakeDataDummy {
         JoinQueueRequest joinQueueRequest = new JoinQueueRequest();
         joinQueueRequest.setContact("085455664444");
         joinQueueRequest.setFullName("Lakeesha");
-        joinQueueRequest.setIpAdress("192.168.1.1");
+        joinQueueRequest.setIpAddress("192.168.1.1");
         joinQueueRequest.setQueueId("VlTudOiQ1K7l5kg6xLDyA38JLdPbl_2loOfUwA20cZykYgr4_6qAlxKaGdIuFZw8TKhuyIsE4D41PjOlwUo13g4");
 
         JoinQueueRequest joinQueueRequest2 = new JoinQueueRequest();
         joinQueueRequest2.setContact("085455664443");
         joinQueueRequest2.setFullName("Gar");
-        joinQueueRequest2.setIpAdress("192.168.1.2");
+        joinQueueRequest2.setIpAddress("192.168.1.2");
         joinQueueRequest2.setQueueId("VlTudOiQ1K7l5kg6xLDyA38JLdPbl_2loOfUwA20cZykYgr4_6qAlxKaGdIuFZw8TKhuyIsE4D41PjOlwUo13g3");
 
         JoinQueueRequest joinQueueRequest3 = new JoinQueueRequest();
         joinQueueRequest3.setContact("085455664s443");
         joinQueueRequest3.setFullName("Mark");
-        joinQueueRequest3.setIpAdress("192.168.1.2");
+        joinQueueRequest3.setIpAddress("192.168.1.2");
         joinQueueRequest3.setQueueId("VlTudOiQ1K7l5kg6xLDyA38JLdPbl_2loOfUwA20cZykYgr4_6qAlxKaGdIuFZw8TKhuyIsE4D41PjOlwUo13g1");
 
         JoinQueueRequest joinQueueRequest4 = new JoinQueueRequest();
         joinQueueRequest4.setContact("085455664s443");
         joinQueueRequest4.setFullName("Mark");
-        joinQueueRequest4.setIpAdress("192.168.1.2");
+        joinQueueRequest4.setIpAddress("192.168.1.2");
         joinQueueRequest4.setQueueId("VlTudOiQ1K7l5kg6xLDyA38JLdPbl_2loOfUwA20cZykYgr4_6qAlxKaGdIuFZw8TKhuyIsE4D41PjOlwUo13g");
+
+        JoinQueueRequest joinQueueRequest5 = new JoinQueueRequest();
+        joinQueueRequest5.setContact("0854556643");
+        joinQueueRequest5.setFullName("Hello");
+        joinQueueRequest5.setIpAddress("192.168.1.8");
+        joinQueueRequest5.setQueueId("clientGeneratedId");
 
         joinQueueRequests.add(joinQueueRequest);
         joinQueueRequests.add(joinQueueRequest2);
         joinQueueRequests.add(joinQueueRequest3);
         joinQueueRequests.add(joinQueueRequest4);
+        joinQueueRequests.add(joinQueueRequest5);
         return joinQueueRequests;
     }
 
@@ -183,4 +190,12 @@ public class FakeDataDummy {
         inQueue3.setId(4L);
         return Set.of(inQueue, inQueue1, inQueue2, inQueue3);
     }
+
+    public static InQueue inQueue() {
+        InQueue inQueue = new InQueue(queue(user().get(0)), user().get(1), user().get(1).getName(), user().get(1).getEmail(), 1);
+        inQueue.setId(1L);
+        return inQueue;
+    }
+
 }
+

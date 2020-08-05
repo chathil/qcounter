@@ -31,7 +31,7 @@ public class InQueue {
     private Queue queue;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Column(name = "joined_at", nullable = false)

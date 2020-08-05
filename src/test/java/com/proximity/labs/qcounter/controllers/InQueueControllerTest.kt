@@ -1,23 +1,32 @@
 package com.proximity.labs.qcounter.controllers
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.proximity.labs.qcounter.advice.AuthControllerAdvice
 import com.proximity.labs.qcounter.data.dto.request.InQueueRequest
+import com.proximity.labs.qcounter.data.dto.request.JoinQueueRequest
 import com.proximity.labs.qcounter.data.models.user.User
+import com.proximity.labs.qcounter.exception.AppException
+import com.proximity.labs.qcounter.exception.ResourceNotFoundException
 import com.proximity.labs.qcounter.service.InQueueService
 import com.proximity.labs.qcounter.service.QueueService
 import com.proximity.labs.qcounter.utils.FakeDataDummy
-import com.proximity.labs.qcounter.utils.whenever
-import org.hamcrest.Matchers.hasSize
+import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mock
+import org.mockito.Mockito.`when`
+import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.core.MethodParameter
+import org.springframework.data.util.Pair
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.bind.support.WebDataBinderFactory
@@ -26,21 +35,26 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.method.support.ModelAndViewContainer
 import java.util.*
 
+
 @SpringBootTest
+@ExtendWith(MockitoExtension::class)
 internal class InQueueControllerTest {
 
     @Autowired
-    private lateinit var inQueueController: InQueueController
+    lateinit var inQueueController: InQueueController
+
+    @Autowired
+    lateinit var authControllerAdvice: AuthControllerAdvice
 
     @MockBean
-    private lateinit var inQueueService: InQueueService
+    lateinit var inQueueService: InQueueService
 
     @MockBean
-    private lateinit var queueService: QueueService
+    lateinit var queueService: QueueService
 
     private lateinit var mockMvc: MockMvc
 
-    private fun putAuthenticationPrincipal(): HandlerMethodArgumentResolver? {
+    private fun putAuthenticationPrincipal(idx: Int): HandlerMethodArgumentResolver? {
         return object : HandlerMethodArgumentResolver {
             override fun supportsParameter(parameter: MethodParameter): Boolean {
                 return parameter.parameterType.isAssignableFrom(User::class.java)
@@ -48,24 +62,84 @@ internal class InQueueControllerTest {
 
             override fun resolveArgument(parameter: MethodParameter, mavContainer: ModelAndViewContainer,
                                          webRequest: NativeWebRequest, binderFactory: WebDataBinderFactory): Any {
-                return FakeDataDummy.user()[0]
+                return FakeDataDummy.user()[idx]
             }
         }
     }
 
+
+    @BeforeEach
+    fun setUp() {
+        mockMvc = MockMvcBuilders.standaloneSetup(inQueueController).setCustomArgumentResolvers(putAuthenticationPrincipal(0)).setControllerAdvice(authControllerAdvice).build()
+        `when`(queueService.findFirstByClientGeneratedId(any(String::class.java))).thenReturn(Optional.of(FakeDataDummy.savedQueue()))
+        `when`(inQueueService.findByQueueId(any(Long::class.java))).thenReturn(FakeDataDummy.inQueues())
+        `when`(inQueueService.joinQueueAndPersist(any(User::class.java), any(JoinQueueRequest::class.java))).thenReturn(Optional.of(Pair.of(FakeDataDummy.savedQueue(), FakeDataDummy.inQueue())))
+    }
+
     @Test
-    fun inQueues() {
-        whenever(queueService.findFirstByClientGeneratedId(any(String::class.java))).thenReturn(Optional.of(FakeDataDummy.savedQueue()))
-        whenever(inQueueService.findByQueueId(any(Long::class.java))).thenReturn(FakeDataDummy.inQueues())
-        mockMvc = MockMvcBuilders.standaloneSetup(inQueueController).setCustomArgumentResolvers(putAuthenticationPrincipal()).build()
+    fun whenInQueues_thenReturnSucessJson() {
+        mockMvc = MockMvcBuilders.standaloneSetup(inQueueController).setCustomArgumentResolvers(putAuthenticationPrincipal(0)).setControllerAdvice(authControllerAdvice).build()
         val inQRequest = InQueueRequest("clientGeneratedId")
-        println(ObjectMapper().writeValueAsString(inQRequest))
         mockMvc
-                .perform(MockMvcRequestBuilders.get("/in_queue")
+                .perform(get("/in_queue")
                         .content(ObjectMapper().writeValueAsString(inQRequest))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk)
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").isArray)
     }
+
+    @Test
+    fun whenInQueues_thenReturnOwnerError() {
+        mockMvc = MockMvcBuilders.standaloneSetup(inQueueController).setCustomArgumentResolvers(putAuthenticationPrincipal(2)).setControllerAdvice(authControllerAdvice).build()
+        val inQRequest = InQueueRequest("clientGeneratedId")
+        mockMvc
+                .perform(get("/in_queue")
+                        .content(ObjectMapper().writeValueAsString(inQRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError)
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.data").value("Queue with id ${inQRequest.queueId} doesn't belongs to ${FakeDataDummy.user()[2].name}"))
+    }
+
+    @Test
+    fun whenInQueues_thenReturnDoesntExistError() {
+        `when`(queueService.findFirstByClientGeneratedId(any(String::class.java))).thenReturn(Optional.empty())
+        mockMvc = MockMvcBuilders.standaloneSetup(inQueueController).setCustomArgumentResolvers(putAuthenticationPrincipal(2)).setControllerAdvice(authControllerAdvice).build()
+        val inQRequest = InQueueRequest("clientGeneratedId")
+        mockMvc
+                .perform(get("/in_queue")
+                        .content(ObjectMapper().writeValueAsString(inQRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound)
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.data").value("Queue not found with queue_id : '${inQRequest.queueId}'"))
+    }
+
+    @Test
+    fun whenAddToQueue_thenReturnSuccessJson() {
+        `when`(inQueueService.addToQueueAndPersist(any(User::class.java), any(JoinQueueRequest::class.java))).thenReturn(Optional.of(Pair.of(FakeDataDummy.savedQueue(), FakeDataDummy.inQueue())))
+        mockMvc = MockMvcBuilders.standaloneSetup(inQueueController).setCustomArgumentResolvers(putAuthenticationPrincipal(0)).setControllerAdvice(authControllerAdvice).build()
+        println(ObjectMapper().writeValueAsString(FakeDataDummy.joinQueueRequests()[2]))
+        mockMvc.perform(post("/in_queue")
+                .content(ObjectMapper().writeValueAsString(FakeDataDummy.joinQueueRequests()[2]))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk)
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+    }
+
+    @Test
+    fun whenAddToQueue_thenReturnDoesntExistError() {
+        `when`(inQueueService.addToQueueAndPersist(any(User::class.java), any(JoinQueueRequest::class.java))).thenReturn(Optional.empty())
+        mockMvc = MockMvcBuilders.standaloneSetup(inQueueController).setCustomArgumentResolvers(putAuthenticationPrincipal(0)).setControllerAdvice(authControllerAdvice).build()
+        mockMvc.perform(post("/in_queue")
+                .content(ObjectMapper().writeValueAsString(FakeDataDummy.joinQueueRequests()[2]))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound)
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.data").value("Queue not found with queue_id : '${FakeDataDummy.joinQueueRequests()[2].queueId}'"))
+    }
+
+
+
 }

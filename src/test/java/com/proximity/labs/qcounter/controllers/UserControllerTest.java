@@ -84,10 +84,11 @@ public class UserControllerTest {
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
 
-
         when(SecurityContextHolder.getContext().getAuthentication().getCredentials()).thenReturn(tokenProvider.generateTokenFromUserId(4L));
         mockMvc.perform(get("/user/signout").content(new ObjectMapper().writeValueAsString(signoutRequest)).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.data").value("Log out successful"));
     }
+
+
 }

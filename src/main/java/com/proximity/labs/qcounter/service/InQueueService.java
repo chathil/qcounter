@@ -35,18 +35,28 @@ public class InQueueService {
 
     public Optional<Pair<Queue, InQueue>> joinQueueAndPersist(User currentUser, JoinQueueRequest joinQueueRequest) {
         Queue qToJoin = qService.findFirstByClientGeneratedId(joinQueueRequest.getQueueId()).orElseThrow(() -> new AppException("No such queue"));
+        return Optional.of(Pair.of(qToJoin, getInLine(qToJoin, currentUser, joinQueueRequest)));
+    }
+
+    public Optional<Pair<Queue, InQueue>> addToQueueAndPersist(User currentUser, JoinQueueRequest joinQueueRequest) {
+        Queue qToJoin = qService.findFirstByClientGeneratedId(joinQueueRequest.getQueueId()).orElseThrow(() -> new AppException("No such queue"));
+        if (qToJoin.getOwner() != currentUser)
+            throw new AppException(String.format("Queue with id %s doesn't belongs to %s", joinQueueRequest.getQueueId(), currentUser.getName()));
+        return Optional.of(Pair.of(qToJoin, getInLine(qToJoin, currentUser, joinQueueRequest)));
+    }
+
+    private InQueue getInLine(Queue qToJoin, User currentUser, JoinQueueRequest joinQueueRequest) {
         QueueStats qStats = qToJoin.getQueueStats();
         qStats.setCurrentInQueue(qStats.getCurrentInQueue() + 1);
         qStats = qStatsService.save(qStats);
         InQueue inQueue = new InQueue(qToJoin, currentUser, joinQueueRequest.getFullName(),
                 joinQueueRequest.getContact(), qStats.getCurrentInQueue());
-        inQueue = inQueueRepository.save(inQueue);
-        return Optional.of(Pair.of(qToJoin, inQueue));
+        return inQueueRepository.save(inQueue);
     }
 
     public void increment(Queue queue) {
         QueueStats qStats = queue.getQueueStats();
-        if(qStats.getCurrentQueue() < queue.getMaxCapacity()) {
+        if (qStats.getCurrentQueue() < queue.getMaxCapacity()) {
             int currentQueue = qStats.getCurrentQueue() + queue.getIncrementBy();
             qStats.setCurrentQueue(currentQueue > queue.getQueueStats().getCurrentInQueue() ? queue.getQueueStats().getCurrentInQueue() : currentQueue);
         }

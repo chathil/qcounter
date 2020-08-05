@@ -7,7 +7,7 @@ public class JoinQueueRequest {
     @JsonProperty("queue_id")
     private String queueId;
     @JsonProperty("ip_address")
-    private String ipAdress;
+    private String ipAddress;
     @JsonProperty("full_name")
     private String fullName;
     private String contact;
@@ -20,12 +20,12 @@ public class JoinQueueRequest {
         this.queueId = queueId;
     }
 
-    public String getIpAdress() {
-        return ipAdress;
+    public String getIpAddress() {
+        return ipAddress;
     }
 
-    public void setIpAdress(String ipAdress) {
-        this.ipAdress = ipAdress;
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
     }
 
     public String getFullName() {

@@ -3,7 +3,7 @@ GET http://localhost:8080/auth/signin
 Content-Type: application/json
 
 {
-  "device_token": "intexxslw",
+  "device_token": "intmmexxslw",
   "ip_address": "1231123",
   "email": "yusuf@gmail.com",
   "password": "password"
@@ -124,4 +124,16 @@ Content-Type: application/json
 
 {
   "queue_id": "VlTudOiQ1K7l5kg6xLDyA38JLdPbl_2loOfUwA20cZykYgr4_6qAlxKaGdIuFZw8TKhuyIsE4D41PjOlwUo13g3"
+}
+
+### add to queue
+POST http://localhost:8080/in_queue
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNTk2NjE0NTM1LCJleHAiOjE1OTY2NDY5MzV9.QSbZU_ETnAxnZqSLs0DMicQcyWrawEnH62wKWCtSpC0g74XHPfpvfwyNDTuxjjzCHotkqDn2t6HPQEqnfx5KMw
+Content-Type: application/json
+
+{
+  "queue_id": "VlTudOiQ1K7l5kg6xLDyA38JLdPbl_2loOfUwA20cZykYgr4_6qAlxKaGdIuFZw8TKhuyIsE4D41PjOlwUo13g1",
+  "ip_address": "192.1782.2222",
+  "full_name": "Ihza Ahmad III",
+  "contact": "0853005488"
 }
