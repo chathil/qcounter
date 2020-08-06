@@ -53,7 +53,7 @@ public class QueueController {
      */
     @ApiOperation(value = "Create a new queue and return the created queue along with it stats data from queue_stats table.")
     @PostMapping
-    public ResponseEntity newQueue(@CurrentUser User currentUser, @RequestBody NewQueueRequest nQueueRequest) {
+    public ResponseEntity<QueueResponse> newQueue(@CurrentUser User currentUser, @RequestBody NewQueueRequest nQueueRequest) {
         if (currentUser.getMyQueues().size() > 1)
             throw new AppException("You have reached max queue you can create. which is two");
 

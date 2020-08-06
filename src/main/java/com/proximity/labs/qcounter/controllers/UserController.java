@@ -64,13 +64,13 @@ public class UserController {
      * Log the user out from the app/device. Release the refresh token associated
      * with the user device. doc by @chathil
      *
-     * @param customUserDetails
-     * @param signoutRequest
-     * @return ResponseEntity
+     * @param customUserDetails currently authenticated user
+     * @param signoutRequest contains a user device to logout
+     * @return information about the logout whether it's successful or not.
      */
     @GetMapping("/signout")
     @ApiOperation(value = "Logs the specified user device and clears the refresh tokens associated with it")
-    public ResponseEntity signout(@CurrentUser User customUserDetails, @RequestBody SignoutRequest signoutRequest) {
+    public ResponseEntity<ApiResponse> signout(@CurrentUser User customUserDetails, @RequestBody SignoutRequest signoutRequest) {
         userService.logout(signoutRequest.getDeviceToken());
         logger.info(customUserDetails.getEmail());
         Object credentials = SecurityContextHolder

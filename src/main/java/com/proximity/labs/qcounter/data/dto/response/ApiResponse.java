@@ -14,16 +14,24 @@
 package com.proximity.labs.qcounter.data.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.time.Instant;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@ApiModel(value = "Common API Response", description = "A default API response used in multiple endpoints")
 public class ApiResponse {
 
+    @ApiModelProperty(value = "contains message about the operation")
     private final String data;
+    @ApiModelProperty(value = "true if an operation is performed successfully, false otherwise")
     private final Boolean success;
+    @ApiModelProperty(value = "operation time")
     private final String timestamp;
+    @ApiModelProperty(value = "cause of the operation")
     private final String cause;
+    @ApiModelProperty(value = "operation's enpoint")
     private final String path;
 
     public ApiResponse(Boolean success, String data, String cause, String path) {

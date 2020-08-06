@@ -1,6 +1,5 @@
 package com.proximity.labs.qcounter.controllers;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.proximity.labs.qcounter.data.dto.request.AuthRequest;
 import com.proximity.labs.qcounter.data.dto.request.SigninRequest;
 import com.proximity.labs.qcounter.data.dto.request.SignupRequest;
@@ -102,7 +101,6 @@ public class AuthController {
      * @param authRequest
      * @return @ResponseEntity
      */
-    @VisibleForTesting
     public ResponseEntity signinHelper(AuthRequest authRequest) {
         Authentication authentication = authService
                 .authenticateUser(authRequest.getEmail(),

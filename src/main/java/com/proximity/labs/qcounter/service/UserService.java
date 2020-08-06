@@ -13,7 +13,6 @@
  */
 package com.proximity.labs.qcounter.service;
 
-import com.google.common.annotations.VisibleForTesting;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

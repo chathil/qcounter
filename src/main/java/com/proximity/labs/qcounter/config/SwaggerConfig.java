@@ -15,6 +15,9 @@ package com.proximity.labs.qcounter.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -25,24 +28,26 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @EnableSwagger2
 @Configuration
-public class SwaggerConfig {
-
+@EnableWebMvc
+public class SwaggerConfig implements WebMvcConfigurer {
     @Bean
     public Docket productApi() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .select()
+        return new Docket(DocumentationType.SWAGGER_2).select()
                 .apis(RequestHandlerSelectors.basePackage("com.proximity.labs.qcounter"))
-                .paths(PathSelectors.regex("/api.*"))
-                .build()
-                .apiInfo(metaInfo());
+                .build().apiInfo(metaInfo());
     }
 
     private ApiInfo metaInfo() {
-        return new ApiInfoBuilder()
-                .description("Backend API For the Auth/User Service")
-                .title("Auth/User API")
-                .version("Unreleased [WIP]")
-                .build();
+        return new ApiInfoBuilder().description("Backend API For the Auth/User Service").title("Auth/User API")
+                .version("Unreleased [WIP]").build();
     }
 
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/swagger-ui.html")
+                .addResourceLocations("classpath:/META-INF/resources/");
+
+        registry.addResourceHandler("/webjars/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/");
+    }
 }

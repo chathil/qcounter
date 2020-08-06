@@ -14,14 +14,21 @@
 package com.proximity.labs.qcounter.data.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
+@ApiModel(value = "JWT Authentication Response", description = "Returns by API when a token is successfully refreshed")
 public class JwtAuthenticationResponse {
+    @ApiModelProperty(value = "access token needed to access secured resources")
     @JsonProperty("access_token")
     private String accessToken;
+    @ApiModelProperty(value = "refresh token to refresh access token when expired")
     @JsonProperty("refresh_token")
     private String refreshToken;
+    @ApiModelProperty(value = "Type of the token issued")
     @JsonProperty("token_type")
     private String tokenType;
+    @ApiModelProperty(value = "The issued token's lifetime")
     @JsonProperty("expiry_duration")
     private Long expiryDuration;
 
