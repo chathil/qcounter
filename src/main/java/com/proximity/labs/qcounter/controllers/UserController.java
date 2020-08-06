@@ -36,6 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.activation.MimetypesFileTypeMap;
 
@@ -70,7 +71,7 @@ public class UserController {
      */
     @GetMapping("/signout")
     @ApiOperation(value = "Logs the specified user device and clears the refresh tokens associated with it")
-    public ResponseEntity<ApiResponse> signout(@CurrentUser User customUserDetails, @RequestBody SignoutRequest signoutRequest) {
+    public ResponseEntity<ApiResponse> signout(@ApiIgnore  @CurrentUser User customUserDetails, @RequestBody SignoutRequest signoutRequest) {
         userService.logout(signoutRequest.getDeviceToken());
         logger.info(customUserDetails.getEmail());
         Object credentials = SecurityContextHolder

@@ -52,13 +52,13 @@ public class AuthController {
      * Register new user. On Successfull @signInHelper will be called to authenticate new user right away.
      * doc by @chathil
      *
-     * @param signupRequest
+     * @param signupRequest information to authorized a user
      * @return ResponseEntity
      */
     @ApiOperation(value = "Register new user, then log them in. If succeed return the auth tokens and some other data")
     @PostMapping("/signup")
     public @ResponseBody
-    ResponseEntity signup(@RequestBody SignupRequest signupRequest) {
+    ResponseEntity<AuthResponse> signup(@RequestBody SignupRequest signupRequest) {
 
         return authService.signUp(signupRequest).map(user -> signinHelper(signupRequest)).orElseThrow(
                 () -> new UserRegistrationException(signupRequest.getEmail(), "Missing user object in database"));
@@ -66,7 +66,7 @@ public class AuthController {
 
     @ApiOperation(value = "Logs the user in to the system and return the auth tokens and some other data")
     @GetMapping("/signin")
-    public ResponseEntity signin(@RequestBody SigninRequest signinRequest) {
+    public ResponseEntity<AuthResponse> signin(@RequestBody SigninRequest signinRequest) {
         return signinHelper(signinRequest);
     }
 
@@ -75,13 +75,13 @@ public class AuthController {
      * and return a new token to the caller
      * doc by @chathil
      *
-     * @param tokenRefreshRequest
+     * @param tokenRefreshRequest contains refresh token
      * @return @ResponseEntity
      */
     @GetMapping("/refresh")
     @ApiOperation(value = "Refresh the expired jwt authentication by issuing a token refresh request and returns the"
             + "updated response tokens")
-    public ResponseEntity refreshJwtToken(
+    public ResponseEntity<JwtAuthenticationResponse> refreshJwtToken(
             @ApiParam(value = "The TokenRefreshRequest payload") @RequestBody TokenRefreshRequest tokenRefreshRequest) {
 
         return authService.refreshJwtToken(tokenRefreshRequest).map(updatedToken -> {
@@ -95,13 +95,13 @@ public class AuthController {
 
     /**
      * Shared method in signin & signup route. This method helps authenticate new user.
-     * On successfull signin/ signup. this method returns @AuthResponse wrapped in Response Entity.
+     * On successful signin/ signup. this method returns @AuthResponse wrapped in Response Entity.
      * doc by @chathil
      *
-     * @param authRequest
+     * @param authRequest information to authorized a user
      * @return @ResponseEntity
      */
-    public ResponseEntity signinHelper(AuthRequest authRequest) {
+    public ResponseEntity<AuthResponse> signinHelper(AuthRequest authRequest) {
         Authentication authentication = authService
                 .authenticateUser(authRequest.getEmail(),
                         authRequest.getPassword())

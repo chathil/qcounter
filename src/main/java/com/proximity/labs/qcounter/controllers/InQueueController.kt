@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.apache.log4j.Logger;
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import springfox.documentation.annotations.ApiIgnore
 import java.util.*
 
 
@@ -41,7 +42,7 @@ class InQueueController @Autowired constructor(private val queueService: QueueSe
     @ApiOperation(value = "Returns all users/ clients that's currently inside the specified queue." +
             "This endpoint can only be hit by a queue owner.")
     @GetMapping
-    fun inQueues(@CurrentUser user: User, @RequestBody inQueueRequest: InQueueRequest): ResponseEntity<List<InQueueResponse>> {
+    fun inQueues(@ApiIgnore @CurrentUser user: User, @RequestBody inQueueRequest: InQueueRequest): ResponseEntity<List<InQueueResponse>> {
         return queueService.findFirstByClientGeneratedId(inQueueRequest.queueId).map {
             if (it.owner != user)
                 throw AppException("Queue with id ${inQueueRequest.queueId} doesn't belongs to ${user.name}")
@@ -68,7 +69,7 @@ class InQueueController @Autowired constructor(private val queueService: QueueSe
             "because no registered user is associated with it. Because of that client added to a queue this way will not" +
             "be notify about queue changes via websocket. This endpoint can only be hit by a queue owner.")
     @PostMapping
-    fun addToInQueue(@CurrentUser user: User, @RequestBody joinQueueRequest: JoinQueueRequest): ResponseEntity<InQueueResponse> {
+    fun addToInQueue(@ApiIgnore @CurrentUser user: User, @RequestBody joinQueueRequest: JoinQueueRequest): ResponseEntity<InQueueResponse> {
         return inQueueService.addToQueueAndPersist(user, joinQueueRequest).map {
             ResponseEntity.ok(InQueueResponse(it.second.id, -1L, it.second.queueNum, it.second.name, it.second.contact))
         }.orElseThrow { ResourceNotFoundException("Queue", "queue_id", joinQueueRequest.queueId) }
@@ -88,7 +89,7 @@ class InQueueController @Autowired constructor(private val queueService: QueueSe
             "If succeed or no record found with the specified id, will return success message." +
             "This endpoint can only be hit by a queue owner.")
     @DeleteMapping
-    fun remoteFromInQueue(@CurrentUser user: User, @RequestBody removeFromInQueueRequest: RemoveFromInQueueRequest): ResponseEntity<ApiResponse> {
+    fun remoteFromInQueue(@ApiIgnore @CurrentUser user: User, @RequestBody removeFromInQueueRequest: RemoveFromInQueueRequest): ResponseEntity<ApiResponse> {
         inQueueService.removeFromInQueue(user, removeFromInQueueRequest)
         return ResponseEntity.of(Optional.of(ApiResponse(true, "User with id ${removeFromInQueueRequest.id} removed")))
     }

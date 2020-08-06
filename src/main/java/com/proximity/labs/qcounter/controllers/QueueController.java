@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
 @RequestMapping("/queue")
@@ -103,7 +104,7 @@ public class QueueController {
             }
     )
     @PostMapping(value = "/join")
-    public ResponseEntity<JoinQueueResponse> joinQueue(@CurrentUser User currentUser, @RequestBody JoinQueueRequest joinQueueRequest) {
+    public ResponseEntity<JoinQueueResponse> joinQueue(@ApiIgnore  @CurrentUser User currentUser, @RequestBody JoinQueueRequest joinQueueRequest) {
         if (currentUser.getQueues().size() > 1)
             throw new AppException("You have reached max queue you can join. which is two");
         Queue qToJoin = queueService.findFirstByClientGeneratedId(joinQueueRequest.getQueueId())
