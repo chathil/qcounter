@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.proximity.labs.qcounter.data.dto.request.JoinQueueRequest;
+import com.proximity.labs.qcounter.data.dto.request.RemoveFromInQueueRequest;
 import com.proximity.labs.qcounter.data.models.queue.InQueue;
 import com.proximity.labs.qcounter.data.models.queue.Queue;
 import com.proximity.labs.qcounter.data.models.queue.QueueStats;
@@ -14,6 +15,7 @@ import com.proximity.labs.qcounter.data.models.user.User;
 import com.proximity.labs.qcounter.data.repositories.InQueueRepository;
 
 import com.proximity.labs.qcounter.exception.AppException;
+import com.proximity.labs.qcounter.exception.ResourceNotFoundException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
@@ -40,7 +42,7 @@ public class InQueueService {
 
     public Optional<Pair<Queue, InQueue>> addToQueueAndPersist(User currentUser, JoinQueueRequest joinQueueRequest) {
         Queue qToJoin = qService.findFirstByClientGeneratedId(joinQueueRequest.getQueueId()).orElseThrow(() -> new AppException("No such queue"));
-        if (qToJoin.getOwner() != currentUser)
+        if (!qToJoin.getOwner().getId().equals(currentUser.getId()))
             throw new AppException(String.format("Queue with id %s doesn't belongs to %s", joinQueueRequest.getQueueId(), currentUser.getName()));
         return Optional.of(Pair.of(qToJoin, getInLine(qToJoin, currentUser, joinQueueRequest)));
     }
@@ -96,6 +98,15 @@ public class InQueueService {
 
     public Optional<InQueue> findUserInQueue(long queueId, long userId) {
         return inQueueRepository.findFirstByQueueIdAndUserId(queueId, userId);
+    }
+
+    public void removeFromInQueue(User user, RemoveFromInQueueRequest removeFromInQueueRequest) {
+        qService.findFirstByClientGeneratedId(removeFromInQueueRequest.getQueueId()).map(queue -> {
+            if (!queue.getOwner().getId().equals(user.getId()))
+                throw new AppException(String.format("Queue with id %s doesn't belongs to %s", removeFromInQueueRequest.getQueueId(), user.getName()));
+            inQueueRepository.deleteById(removeFromInQueueRequest.getId());
+            return true;
+        }).orElseThrow(() -> new ResourceNotFoundException("Queue", "queue_id", removeFromInQueueRequest.getQueueId()));
     }
 
     public Set<InQueue> findUserInQueues(long userId) {

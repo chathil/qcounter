@@ -4,14 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.proximity.labs.qcounter.advice.AuthControllerAdvice
 import com.proximity.labs.qcounter.data.dto.request.InQueueRequest
 import com.proximity.labs.qcounter.data.dto.request.JoinQueueRequest
+import com.proximity.labs.qcounter.data.dto.request.RemoveFromInQueueRequest
 import com.proximity.labs.qcounter.data.models.user.User
-import com.proximity.labs.qcounter.exception.AppException
-import com.proximity.labs.qcounter.exception.ResourceNotFoundException
 import com.proximity.labs.qcounter.service.InQueueService
 import com.proximity.labs.qcounter.service.QueueService
 import com.proximity.labs.qcounter.utils.FakeDataDummy
-import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -25,8 +22,7 @@ import org.springframework.core.MethodParameter
 import org.springframework.data.util.Pair
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.bind.support.WebDataBinderFactory
@@ -140,6 +136,15 @@ internal class InQueueControllerTest {
                 .andExpect(jsonPath("$.data").value("Queue not found with queue_id : '${FakeDataDummy.joinQueueRequests()[2].queueId}'"))
     }
 
-
-
+    @Test
+    fun whenDeleteFromQueue_thenReturnSuccessJson() {
+        mockMvc = MockMvcBuilders.standaloneSetup(inQueueController).setCustomArgumentResolvers(putAuthenticationPrincipal(0)).setControllerAdvice(authControllerAdvice).build()
+        val request = RemoveFromInQueueRequest(1L, FakeDataDummy.savedQueue().clientGeneratedId);
+        mockMvc.perform(delete("/in_queue")
+                .content(ObjectMapper().writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk)
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.data").value("User with id ${request.id} removed"))
+    }
 }

@@ -6,3 +6,10 @@ data class InQueueRequest(
         @get:JsonProperty("queue_id")
         val queueId: String
 )
+
+data class RemoveFromInQueueRequest(
+        @get:JsonProperty("id")
+        val id: Long,
+        @get:JsonProperty("queue_id")
+        val queueId: String
+)

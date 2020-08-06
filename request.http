@@ -3,7 +3,7 @@ GET http://localhost:8080/auth/signin
 Content-Type: application/json
 
 {
-  "device_token": "intmmexxslw",
+  "device_token": "intmsmexxslw",
   "ip_address": "1231123",
   "email": "yusuf@gmail.com",
   "password": "password"
@@ -132,8 +132,19 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNTk2NjE0NTM1L
 Content-Type: application/json
 
 {
-  "queue_id": "VlTudOiQ1K7l5kg6xLDyA38JLdPbl_2loOfUwA20cZykYgr4_6qAlxKaGdIuFZw8TKhuyIsE4D41PjOlwUo13g1",
+  "queue_id": "VlTudOiQ1K7l5kg6xLDyA38JLdPbl_2loOfUwA20cZykYgr4_6qAlxKaGdIuFZw8TKhuyIsE4D41PjOlwUo13g3",
   "ip_address": "192.1782.2222",
   "full_name": "Ihza Ahmad III",
   "contact": "0853005488"
 }
+
+### delete from queue
+DELETE http://localhost:8080/in_queue
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNTk2Njc2Nzc4LCJleHAiOjE1OTY3MDkxNzh9.Be4iTjSPFxQyXNeuq3vJw0oZDL-uNm2-yJz-DKvgKW9h5VOJ_1l7X0LVUkMhpUvP9gOzHtDLUTXzikF9prHSHw
+Content-Type: application/json
+
+{
+  "queue_id": "VlTudOiQ1K7l5kg6xLDyA38JLdPbl_2loOfUwA20cZykYgr4_6qAlxKaGdIuFZw8TKhuyIsE4D41PjOlwUo13g3",
+  "id": 12
+}
+
