@@ -3,6 +3,7 @@ package com.proximity.labs.qcounter.controllers;
 import com.proximity.labs.qcounter.exception.AppException;
 import com.proximity.labs.qcounter.service.QrCodeService;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +16,12 @@ import java.awt.image.BufferedImage;
 
 @RestController
 @RequestMapping("/qr")
+@Api(tags = "QR-Code", value = "Generate a QR-Code. It's not secured by default. ")
 public class QrCodeController {
     private final QrCodeService qrCodeService;
     private final String rootUrl;
     private static final Logger logger = Logger.getLogger(UserController.class);
-    
+
     @Autowired
     public QrCodeController(QrCodeService qrCodeService, @Value("${app.root.url}") String rootUrl) {
         this.qrCodeService = qrCodeService;

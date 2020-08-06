@@ -22,7 +22,7 @@ import java.util.*
 
 @RestController
 @RequestMapping("/in_queue")
-@Api(value = "InQueue Rest API. Defines endpoint to manage users/ clients inside a queue." +
+@Api(tags = ["Manage User in Queue", "Manage Queue"], value = "InQueue Rest API. Defines endpoint to manage users/ clients inside a queue." +
         "Most of the operations here can only be performed by a queue owner.")
 class InQueueController @Autowired constructor(private val queueService: QueueService, private val inQueueService: InQueueService) {
 

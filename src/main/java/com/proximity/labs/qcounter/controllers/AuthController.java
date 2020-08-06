@@ -34,7 +34,7 @@ import io.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping("/auth")
-@Api(value = "Authorization Rest API, Defines endpoints that can be hit only when the user is not logged in. It's not secured by default.")
+@Api(tags = "Authentication", value = "Authorization Rest API, Defines endpoints that can be hit only when the user is not logged in. It's not secured by default.")
 public class AuthController {
 
     private static final Logger logger = Logger.getLogger(AuthController.class);

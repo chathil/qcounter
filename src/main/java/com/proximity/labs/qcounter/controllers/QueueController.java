@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/queue")
-@Api(value = "Queue Rest API. Defines queue operation related endpoints")
+@Api(tags = "Queue" ,value = "Queue Rest API. Defines queue operation related endpoints")
 public class QueueController {
 
     private final UserService userService;
