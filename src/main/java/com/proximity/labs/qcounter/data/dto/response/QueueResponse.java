@@ -3,7 +3,7 @@ package com.proximity.labs.qcounter.data.dto.response;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.proximity.labs.qcounter.data.models.queue.QueueState;
 
-public class NewQueueResponse {
+public class QueueResponse {
     
     private String id;
     private String name;
@@ -21,6 +21,8 @@ public class NewQueueResponse {
     @JsonProperty("is_closed_queue")
     private boolean isClosedQueue;
     private QueueState state;
+    private int currentQueue;
+    private int currentInQueue;
     @JsonProperty("qr_code")
     private String qrCode;
 
@@ -120,8 +122,16 @@ public class NewQueueResponse {
         this.qrCode = qrCode;
     }
 
-    public NewQueueResponse(String id, String name, String createdBy, long creatorId, String desc, int max,
-            int incrementBy, Long validUntil, String contact, boolean isClosedQueue, QueueState state, String qrCode) {
+    public int getCurrentQueue() {
+        return currentQueue;
+    }
+
+    public int getCurrentInQueue() {
+        return currentInQueue;
+    }
+
+    public QueueResponse(String id, String name, String createdBy, long creatorId, String desc, int max,
+                         int incrementBy, Long validUntil, String contact, boolean isClosedQueue, QueueState state, int currentQueue, int currentInQueue, String qrCode) {
         this.id = id;
         this.name = name;
         this.createdBy = createdBy;
@@ -134,5 +144,7 @@ public class NewQueueResponse {
         this.isClosedQueue = isClosedQueue;
         this.state = state;
         this.qrCode = qrCode;
+        this.currentInQueue = currentInQueue;
+        this.currentQueue = currentQueue;
     }
 }

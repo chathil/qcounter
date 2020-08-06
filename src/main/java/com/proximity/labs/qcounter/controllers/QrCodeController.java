@@ -1,20 +1,16 @@
 package com.proximity.labs.qcounter.controllers;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.proximity.labs.qcounter.data.dto.request.QrCodeRequest;
+import com.proximity.labs.qcounter.exception.AppException;
 import com.proximity.labs.qcounter.service.QrCodeService;
 
+import io.swagger.annotations.ApiOperation;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import java.awt.image.BufferedImage;
 
 @RestController
@@ -34,14 +30,17 @@ public class QrCodeController {
      * Work in progress. currently returning github pages url
      * will return qr code that contains url to join a queue
      *
-     * @param qrCodeRequest
-     * @return
-     * @throws Exception
+     * @param queueId who the qr code is for
+     * @return a buffered image of qr code
      */
-    @GetMapping(produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<BufferedImage> qrCode(@RequestBody QrCodeRequest qrCodeRequest)
-    throws Exception {
-        return ResponseEntity.ok(qrCodeService.generateQRCodeImage(rootUrl));
+    @ApiOperation(value = "Return a QR-Code PNG image that contains a url to the queue specified by the path variable")
+    @GetMapping(produces = MediaType.IMAGE_PNG_VALUE, value = "/{queue_id}")
+    public ResponseEntity<BufferedImage> qrCode(@PathVariable("queue_id") String queueId) {
+        try {
+            return ResponseEntity.ok(qrCodeService.generateQRCodeImage(rootUrl));
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new AppException(String.format("Failed to generate qr for queue with id %s", queueId));
+        }
     }
-
 }

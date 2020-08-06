@@ -39,7 +39,7 @@ import io.swagger.annotations.ApiOperation;
 
 import javax.activation.MimetypesFileTypeMap;
 
-@Api(value = "User Rest API", description = "Defines endpoints for the logged in user.this enpoints served functions related to user management. It's secured by default")
+@Api(value = "User Rest API. Defines endpoints for the logged in user.this enpoints served functions related to user management. It's secured by default")
 @RestController("/user")
 @RequestMapping("/user")
 public class UserController {
