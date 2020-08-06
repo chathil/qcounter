@@ -1,201 +1,24 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Qcounter by chathil</title>
+<head>
+    <title>ReDoc</title>
+    <!-- needed for adaptive design -->
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Roboto:300,400,700" rel="stylesheet">
 
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/github-light.css">
-    <meta name="viewport" content="width=device-width">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-  </head>
-  <body>
-    <div class="wrapper">
-      <header>
-        <h1>Qcounter</h1>
-        <p></p>
-
-        <p class="view"><a href="https://github.com/chathil/qcounter">View the Project on GitHub <small>chathil/qcounter</small></a></p>
-
-
-        <ul>
-          <li><a href="https://github.com/chathil/qcounter/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/chathil/qcounter/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/chathil/qcounter">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
-      <section>
-        <h1>
-<a id="hey-there-if-you-can-see-this-page-it-means-the-qr-code-works" class="anchor" href="#hey-there-if-you-can-see-this-page-it-means-the-qr-code-works" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><strong>Hey there. if you can see this page it means the qr code works!.</strong>
-</h1>
-<h1>
-<a id="project-structure" class="anchor" href="#project-structure" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Project Structure</h1>
-<pre><code>        qcounter
-        ...
-        ├── src
-            ├── main
-            │   ├── java
-            │   │   └── com
-            │   │       └── proximity
-            │   │           └── labs
-            │   │               └── qcounter
-            │   │                   ├── advice
-            │   │                   ├── annotation
-            │   │                   ├── cache
-            │   │                   ├── config
-            │   │                   ├── controllers
-            │   │                   ├── data
-            │   │                   │   ├── dto
-            │   │                   │   │   ├── request
-            │   │                   │   │   └── response
-            │   │                   │   ├── models
-            │   │                   │   │   ├── audit
-            │   │                   │   │   ├── token
-            │   │                   │   │   └── user
-            │   │                   │   └── repositories
-            │   │                   ├── event
-            │   │                   │   └── listener
-            │   │                   ├── exception
-            │   │                   ├── security
-            │   │                   ├── service
-            │   │                   └── util
-            │   └── resources
-            │       ├── static
-            │       └── templates
-            ...
-</code></pre>
-<h1>
-<a id="project-structure-explained" class="anchor" href="#project-structure-explained" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Project Structure Explained</h1>
-<h2>
-<a id="comproximylabsqcounter" class="anchor" href="#comproximylabsqcounter" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>com.proximy.labs.qcounter</code>
-</h2>
-<h4>
-<a id="advice" class="anchor" href="#advice" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>.advice</code>
-</h4>
-<p>contains classes with methods to throw proper error message. this classes are grouped based on their purpose, like <code>AuthControllerAdvice.java</code> contains methods to throw auth related errors.</p>
-<h4>
-<a id="annotation" class="anchor" href="#annotation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>.annotation</code>
-</h4>
-<p>contains files that combine annotations or create a new one.</p>
-<h4>
-<a id="cache" class="anchor" href="#cache" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>.cache</code>
-</h4>
-<h4>
-<a id="config" class="anchor" href="#config" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>.config</code>
-</h4>
-<h4>
-<a id="controllers" class="anchor" href="#controllers" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>.controllers</code>
-</h4>
-<h4>
-<a id="event" class="anchor" href="#event" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>.event</code>
-</h4>
-<h4>
-<a id="exception" class="anchor" href="#exception" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>.exception</code>
-</h4>
-<h4>
-<a id="security" class="anchor" href="#security" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>.security</code>
-</h4>
-<p>All the packages above are self explanatory.</p>
-<h4>
-<a id="data" class="anchor" href="#data" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>.data</code>
-</h4>
-<h6>
-<a id="dto" class="anchor" href="#dto" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>.dto</code>
-</h6>
-<p>contains classes used to exchange information client-server</p>
-<h6>
-<a id="models" class="anchor" href="#models" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>.models</code>
-</h6>
-<p>contains database entity classes and it's helpers.</p>
-<h6>
-<a id="repositories" class="anchor" href="#repositories" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>.repositories</code>
-</h6>
-<p>contains interface to write queries. each entity must have a repostory.</p>
-<h6>
-<a id="service" class="anchor" href="#service" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>.service</code>
-</h6>
-<p>contains classes to write bussiness logic, usually before making changes to db. but this can also be used to write any other bussiness logic that doesn't involes db.</p>
-<h1>
-<a id="enpoint-documentations" class="anchor" href="#enpoint-documentations" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Enpoint Documentations</h1>
-<h1>
-<a id="faq" class="anchor" href="#faq" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>FAQ</h1>
-<ol>
-<li>
-<p>where to query db?</p>
-<ol>
-<li>
-<p>create abstract query method in an entity respected repository interface.</p>
-<p>Example:</p>
-</li>
-</ol>
-</li>
-</ol>
-<div class="highlight highlight-source-java"><pre>        <span class="pl-k">public</span> <span class="pl-k">interface</span> <span class="pl-en">UserRepository</span> <span class="pl-k">extends</span> <span class="pl-e">JpaRepository&lt;<span class="pl-smi">User</span>, <span class="pl-smi">Long</span>&gt;</span> {
-            <span class="pl-c1">...</span>
-            <span class="pl-k">Optional&lt;<span class="pl-smi">User</span>&gt;</span> <span class="pl-en">findByEmail</span>(<span class="pl-smi">String</span> <span class="pl-v">email</span>);
-            <span class="pl-c1">...</span>
-        }</pre></div>
-<ol start="2">
-<li>
-<p>create a query method in an entity  respected service class</p>
-<p>Example:</p>
-</li>
-</ol>
-<div class="highlight highlight-source-java"><pre>        <span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">UserService</span> <span class="pl-k">implements</span> <span class="pl-e">UserDetailsService</span>{
-
-            <span class="pl-k">private</span> <span class="pl-k">static</span> <span class="pl-k">final</span> <span class="pl-smi">Logger</span> logger <span class="pl-k">=</span> <span class="pl-smi">Logger</span><span class="pl-k">.</span>getLogger(<span class="pl-smi">UserService</span><span class="pl-k">.</span>class);
-            <span class="pl-k">private</span> <span class="pl-k">final</span> <span class="pl-smi">UserRepository</span> userRepository;
-            <span class="pl-k">private</span> <span class="pl-k">final</span> <span class="pl-smi">UserDeviceService</span> userDeviceService;
-            <span class="pl-k">private</span> <span class="pl-k">final</span> <span class="pl-smi">RefreshTokenService</span> refreshTokenService;
-
-            <span class="pl-k">@Autowired</span>
-            <span class="pl-k">public</span> <span class="pl-en">UserService</span>(<span class="pl-smi">UserRepository</span> <span class="pl-v">userRepository</span>, <span class="pl-smi">UserDeviceService</span> <span class="pl-v">userDeviceService</span>, <span class="pl-smi">RefreshTokenService</span> <span class="pl-v">refreshTokenService</span>) {
-                <span class="pl-c1">this</span><span class="pl-k">.</span>userRepository <span class="pl-k">=</span> userRepository;
-                <span class="pl-c1">this</span><span class="pl-k">.</span>userDeviceService <span class="pl-k">=</span> userDeviceService;
-                <span class="pl-c1">this</span><span class="pl-k">.</span>refreshTokenService <span class="pl-k">=</span> refreshTokenService;
-            }
-
-            <span class="pl-c"><span class="pl-c">/**</span></span>
-<span class="pl-c">            * Finds a user in the database by email</span>
-<span class="pl-c">            <span class="pl-c">*/</span></span>
-            <span class="pl-k">public</span> <span class="pl-k">Optional&lt;<span class="pl-smi">User</span>&gt;</span> <span class="pl-en">findByEmail</span>(<span class="pl-smi">String</span> <span class="pl-v">email</span>) {
-                <span class="pl-k">return</span> userRepository<span class="pl-k">.</span>findByEmail(email);
-            }
-            <span class="pl-c1">...</span>
-        }</pre></div>
-<ol start="3">
-<li>
-<p>Inject the service class to where you need it. like in a controller class.</p>
-<p>Example on how to inject:</p>
-<div class="highlight highlight-source-java"><pre><span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">UserController</span> {
-  <span class="pl-k">private</span> <span class="pl-k">static</span> <span class="pl-k">final</span> <span class="pl-smi">Logger</span> logger <span class="pl-k">=</span> <span class="pl-smi">Logger</span><span class="pl-k">.</span>getLogger(<span class="pl-smi">UserController</span><span class="pl-k">.</span>class);
-
-  <span class="pl-k">private</span> <span class="pl-k">final</span> <span class="pl-smi">AuthService</span> authService;
-
-  <span class="pl-k">private</span> <span class="pl-k">final</span> <span class="pl-smi">UserService</span> userService;
-
-  <span class="pl-k">private</span> <span class="pl-k">final</span> <span class="pl-smi">ApplicationEventPublisher</span> applicationEventPublisher;
-  
-  <span class="pl-k">@Autowired</span>
-  <span class="pl-k">public</span> <span class="pl-en">UserController</span>(<span class="pl-smi">AuthService</span> <span class="pl-v">authService</span>, <span class="pl-smi">UserService</span> <span class="pl-v">userService</span>, <span class="pl-smi">ApplicationEventPublisher</span> <span class="pl-v">applicationEventPublisher</span>) {
-      <span class="pl-c1">this</span><span class="pl-k">.</span>authService <span class="pl-k">=</span> authService;
-      <span class="pl-c1">this</span><span class="pl-k">.</span>userService <span class="pl-k">=</span> userService;
-      <span class="pl-c1">this</span><span class="pl-k">.</span>applicationEventPublisher <span class="pl-k">=</span> applicationEventPublisher;
-  }
-</pre></div>
-<p>​</p>
-</li>
-</ol>
-      </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/chathil">chathil</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-      </footer>
-    </div>
-    <script src="javascripts/scale.fix.js"></script>
-    
-  </body>
+    <!--
+    ReDoc doesn't change outer page styles
+    -->
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+<redoc spec-url='https://raw.githubusercontent.com/chathil/verile-doc/master/api-docs.json'></redoc>
+<script src="https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js"> </script>
+</body>
 </html>
